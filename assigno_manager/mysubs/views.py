@@ -1,19 +1,10 @@
-from django.shortcuts import render_template
+from django.shortcuts import render
 
+from rest_framework import viewsets
+# import serializer
+from .serializers import Serializer
+# import model
 
-
-def index(request):
-    """ Index page """
-    return render_template('index.html')
-
-
-def submit(request):
-    """ Submit an assignent """
-
-
-def get_stats(request):
-    """ Get grades on assignmnents """
-
-
-def download_submission(request):
-    """ Download a submission had submitted """
+class AssignmentsView(viewsets.ModelViewSet):
+    """ View for Assignments: API use"""
+    serializer_class = Serializer
