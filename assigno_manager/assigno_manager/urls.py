@@ -26,4 +26,5 @@ router.register(r'subs', views.AssignmentsView, 'sub')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls))
+    path('accounts/', include('allauth.urls'))
 ]
