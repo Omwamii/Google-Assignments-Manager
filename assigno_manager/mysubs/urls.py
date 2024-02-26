@@ -1,11 +1,15 @@
-from django.urls import path, include
-from rest_framework import routers
+from django.urls import path
 from . import views
-from django.contrib import admin
 
-router = routers.DefaultRouter()
-router.register()
+# router = routers.DefaultRouter()
+# router.register(r'submissions', SubmissionViewset)
+
 urlpatterns = [
-        path('admin/', admin.site.urls),
-        path('api/', include(router.urls))
+        path('submissions/', views.submissions),
+        path('assignments/', views.assignments),
+        path('units/', views.units),
+        path('notifications/', views.get_notifications),
+        path('submit-assignment/', views.submit_assignment),
+        path('add-to-calendar/', views.add_to_calendar),
+        path('send-private/', views.send_private_message)
         ]

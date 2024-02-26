@@ -28,7 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-SITE_ID=1
+# Tutorial settings **
+# SITE_ID=1
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,22 +42,23 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
+    # 'django.contrib.sites',
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth.socialaccount',
+    # 'allauth.socialaccount.providers.google',
 ]
 
-SOCIAL_ACCOUNT_PROVIDERS = {
-    "google": {
-        "SCOPE": [
-            "profile",
-            "email"
-        ],
-        "AUTH_PARAMS": {"access_type": "online"}
-    }
-}
+# Tutorial settings
+# SOCIAL_ACCOUNT_PROVIDERS = {
+#     "google": {
+#         "SCOPE": [
+#             "profile",
+#             "email"
+#         ],
+#         "AUTH_PARAMS": {"access_type": "online"}
+#     }
+# }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -150,10 +152,29 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATIC_FILES_DIR = [
     os.path.join(BASE_DIR, 'g-assigns/build/static'),
-]
+] 
 
-AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",
-                           "allauth.accounts.auth_backends.AuthenticationBackend")
+# Some backend auth settings from online tutorial
+# AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",
+#                            "allauth.account.auth_backends.AuthenticationBackend")
 
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = "/"
+
+# LOGGER SETTINGS
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'error.log'),
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
