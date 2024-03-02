@@ -21,11 +21,16 @@ class App:
 
     # add memoization
     # If modifying these scopes, delete the file token.json.
-    SCOPES = ["https://www.googleapis.com/auth/classroom.courses.readonly",
-              "https://www.googleapis.com/auth/classroom.announcements.readonly",
-              "https://www.googleapis.com/auth/classroom.coursework.me.readonly",
-              "https://www.googleapis.com/auth/classroom.push-notifications",
-              "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly"]
+    SCOPES = [
+      "https://www.googleapis.com/auth/classroom.courses.readonly",
+      "https://www.googleapis.com/auth/classroom.announcements",
+      "https://www.googleapis.com/auth/classroom.course-work.readonly",
+      "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly",
+      "https://www.googleapis.com/auth/classroom.announcements.readonly",
+      "https://www.googleapis.com/auth/classroom.addons.student",
+      "https://www.googleapis.com/auth/classroom.push-notifications",
+      "https://www.googleapis.com/auth/userinfo.profile"]
+
 
     def __init__(self):
       """ Initialize Oauth login for each instance (self.creds)
@@ -41,10 +46,10 @@ class App:
         if self.creds and self.creds.expired and self.creds.refresh_token:
           self.creds.refresh(Request())
         else:
-          # credentials file was downloaded at root from google cloud console credentials
-          self.flow = InstalledAppFlow.from_client_secrets_file("credentials.json", self.SCOPES)
-          self.creds = self.flow.run_local_server(port=8000)
-          
+            # credentials file was downloaded at root from google cloud console credentials
+            self.flow = InstalledAppFlow.from_client_secrets_file("credentials.json", self.SCOPES)
+            self.creds = self.flow.run_local_server(port=8080)
+        
         with open("token.json", "w") as token:
           token.write(self.creds.to_json())
 
@@ -61,7 +66,16 @@ class App:
       return self.data.get('courses', [])
 
     
-    def get_submissions(self, course_id):
-      """ Return student submissions 
+    def get_coursework(self, course_id):
+      """ Return unit's coursework
+          course_id: id for unit 
       """
+      # Add function to get materials (addons) on a coursework 
       return self.service.courses().courseWork().list(courseId=course_id).execute()
+    
+    def get_notifications(self, course_id):
+      """ Return announcements on a course"""
+      return self.service.courses().announcements().list(courseId=course_id).execute()
+
+if __name__ == "__main__":
+  app = App()  # For testing to separate auth errors from app errors

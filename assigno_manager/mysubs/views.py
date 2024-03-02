@@ -8,9 +8,11 @@ app = App()  # App instance with auth & classroom resources
 
 
 @api_view(['GET'])
-def submissions(request):
-    """ Returns student's submissions """
-    return Response({'data': app.get_submissions(640286398164)})
+def coursework(request):
+    """ Returns coursework of a unit
+        Required: unit ID
+    """
+    return Response({'data': app.get_coursework(632004324252)})
 
 
 @api_view(['GET'])
@@ -40,7 +42,7 @@ def add_to_calendar(request):
 @api_view(['GET'])
 def get_notifications(request):
     """ Get actions needed (notifs) """
-    pass
+    return Response({'data': app.get_notifications(632004324252)})
 
 @api_view(['POST'])
 def send_private_message(request):

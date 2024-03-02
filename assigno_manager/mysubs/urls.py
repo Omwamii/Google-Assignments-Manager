@@ -5,7 +5,7 @@ from . import views
 # router.register(r'submissions', SubmissionViewset)
 
 urlpatterns = [
-        path('submissions/', views.submissions),
+        path('coursework/', views.coursework),
         path('assignments/', views.assignments),
         path('units/', views.units),
         path('notifications/', views.get_notifications),
