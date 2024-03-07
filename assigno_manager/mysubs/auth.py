@@ -77,7 +77,13 @@ class App:
     
     def get_courses(self):
       """ Return all courses student is enrolled in """
-      return self.data.get('courses', [])
+      # return self.data.get('courses', [])
+      courses = self.data.get('courses', [])
+      units = list()
+      for course in courses:
+        data = {'id': course['id'], 'name': course['name']}
+        units.append(data)
+      return units
 
     
     def get_coursework(self, course_id: int) -> str:
@@ -85,7 +91,10 @@ class App:
           course_id: id for unit 
       """
       # Add function to get materials (addons) on a coursework 
-      return (self.service.courses().courseWork().list(courseId=course_id).execute()).get('courseWork')
+      c_work = self.service.courses().courseWork().list(courseId=course_id).execute().get('courseWork')
+      if not c_work:
+        return []
+      return c_work
     
     def get_notifications(self, course_id: int) -> str:
       """ Return announcements on a course
@@ -95,21 +104,52 @@ class App:
       """
       notifs = self.service.courses().announcements().list(courseId=course_id).execute().get('announcements')
       notifications = list()
+      format = "%Y-%m-%dT%H:%M:%S.%fZ"
       for notif in notifs:
+        now = datetime.utcnow()
+        then = datetime.strptime(notif['updateTime'], format)
+        time_passed = now - then
+        minutes_passed = time_passed.total_seconds() // 60
+        if time_passed.days:
+          time_str = str(time_passed.days) + ' days ago'
+        else:
+          time_str = minutes_passed + ' minutes ago'
         notif_obj = {'id': notif['id'], 'courseId': notif['courseId'], 'text': notif['text'],
-                     'time': notif['updateTime']}
+                     'time': time_str}
         notifications.append(notif_obj)
       return notifications
-
     
-    def get_submission(self, course_id: int, course_work_id: int) -> str:
+
+    def get_submission(self, course_id: int, coursework_id: int) -> str:
+      """ Return a submission for a coursework """
+      # possible issue: studentSubmisions being an array, above code assumes 
+      # there's always one submission for a coursework assigned a grade..
+
+      return self.service.courses().courseWork().studentSubmissions().list(
+        courseId=course_id,
+        courseWorkId=coursework_id
+      ).execute().get('studentSubmissions')[0]
+    
+    
+    def get_unit_submissions(self, course_id: int) -> str:
       """ Return student submissions for a unit
           course_id: unit ID
           course_work_id: ID for specific coursework item
       """
-      return (self.service.courses().courseWork().studentSubmissions().list(courseId=course_id,
-                                                                         courseWorkId=course_work_id)
-                                                                         .execute()).get('studentSubmissions')
+      coursework = self.get_coursework(course_id)
+      submissions = list()
+      for work in coursework:
+        res = self.get_submission(course_id, work['id'])
+        if not res.get('assignmentSubmission'):
+          # Could be a group submission, not your submission
+          continue
+
+        data = {'id': res['id'], 'title': work.get('title'), 'link': work.get('alternateLink'),
+               'maxPoints': work.get('maxPoints'), 'grade': res.get('assignedGrade'),
+               'submission': res.get('assignmentSubmission')
+               }
+        submissions.append(data)
+      return submissions
     
     def do_submit(self, course_id: int, course_work_id: int, attachments: List[dict]) -> str:
       """ Submit an assignment with attachments"""
@@ -141,20 +181,27 @@ class App:
       for course in courses:
         if course['courseState'] != 'ACTIVE':
           continue
+        unit_name = course['name']
         c_work = self.get_coursework(course['id'])
-        for work in c_work.get('courseWork', []):
+        for work in c_work:
           if work.get('materials'):
             if work['materials'][0].get('form'):
-              continue # API does not support form submission
+              # API does not support form submission
+              continue 
           d_time = work.get('dueDate', None)
+          if d_time:
+             d_time = datetime(d_time['year'], d_time['month'], d_time['day'])
+          pending_work = {
+            'id': work['id'], 'unit': unit_name, 'title': work.get('title'), 'classLink': work['alternateLink'],
+            'points': work.get('maxPoints'), 'dueTime': d_time
+          }
           if not d_time:
-            pending.append(work) # work does not have due date
-            due_time = None
+            # work does not have due date
+            pending.append(pending_work)
           else:
-            due_time = datetime(d_time['year'], d_time['month'], d_time['day'])
-          if due_time and due_time > datetime.now():
-            # deadline for assignment not reached yet
-            pending.append(work)
+            if d_time > datetime.now():
+              # deadline for assignment not reached yet
+              pending.append(pending_work)
       return pending
     
     def get_grades(self, course_id):
@@ -164,8 +211,8 @@ class App:
       for work in c_work:
         sub = self.get_submission(course_id, work.get('id', None))
         res = {'title': work.get('title'), 'link': work.get('alternateLink'),
-               'maxPoints': work.get('maxPoints'), 'grade': sub[0].get('assignedGrade'),
-               'submission': sub[0]['assignmentSubmission'].get('attachments')}
+               'maxPoints': work.get('maxPoints'), 'grade': sub.get('assignedGrade')
+               }
         grades.append(res)
       return grades
 

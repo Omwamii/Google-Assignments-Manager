@@ -1,1 +1,20 @@
+.notifications {
+    padding-top: 15px;
+    /* background-color: #5b54a1; */
+    height: 100%;
+}
 
+.card {
+    min-width: 700px !important;
+    margin: 0 auto;
+}
+
+.units {
+    display: flex;
+    flex-direction: column;
+}
+
+.btn {
+    max-width: 700px !important;
+    margin: 10px auto;
+}
