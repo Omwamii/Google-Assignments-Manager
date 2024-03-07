@@ -1,4 +1,5 @@
 import './index.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Navbar = () => {
     return (
@@ -16,6 +17,11 @@ const Navbar = () => {
         <div className="container-fluid">
           <a className="navbar-brand" href="#">
             Submissions
+          </a>
+        </div>
+        <div className="container-fluid">
+          <a className="navbar-brand" href="#">
+            Grades
           </a>
         </div>
       </nav>

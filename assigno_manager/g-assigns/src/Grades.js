@@ -23,14 +23,17 @@ function Grades() {
 
     useEffect(() => {
         (async () => {
-            try{
-                const full_url = `${url}notifications/${currentUnitId}/`
-                const data = await axios.get(full_url);
-                setNotifs(data.data);
-                console.log(data.data) // validate data
+          if (currentUnitId !== 0) {
+            // prevent from fetching first time (default id == 0)
+            try {
+              const full_url = `${url}notifications/${currentUnitId}/`;
+              const data = await axios.get(full_url);
+              setNotifs(data.data);
+              console.log(data.data); // validate data
             } catch (err) {
-                console.error(err);
+              console.error(err);
             }
+          }
         })();
     }, [currentUnitId]);
 
