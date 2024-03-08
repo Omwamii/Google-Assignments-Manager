@@ -51,7 +51,7 @@ class App:
         if self.creds and self.creds.expired and self.creds.refresh_token:
           self.creds.refresh(Request())
         else:
-            # credentials file was downloaded at root from google cloud console credentials
+            # credentials file was downloaded to root from google cloud console credentials
             self.flow = InstalledAppFlow.from_client_secrets_file("credentials.json", self._SCOPES)
             self.creds = self.flow.run_local_server(port=8080)
         
@@ -81,6 +81,9 @@ class App:
       courses = self.data.get('courses', [])
       units = list()
       for course in courses:
+        if course['courseState'] != 'ACTIVE':
+          # archived courses
+          continue
         data = {'id': course['id'], 'name': course['name']}
         units.append(data)
       return units
@@ -203,6 +206,62 @@ class App:
               # deadline for assignment not reached yet
               pending.append(pending_work)
       return pending
+    
+    def get_assignment(self, unit_id: int, course_work_id: int) -> str:
+      """ Return a specific assignment """
+      test_d = {
+        'year': 2023,
+        'month': 11,
+        'day': 29,
+        'hour': 10,
+        'minute': 30
+      }
+      test_date = datetime(**test_d)
+  
+      work = self.service.courses().courseWork().get(
+        courseId=unit_id, id=course_work_id).execute()
+      if work.get('dueDate'):
+        date = work.get('dueDate')
+        if work.get('dueTime'):
+           time = work.get('dueTime')
+           time = {'hour': time['hours'], 'minute': time['minutes']}
+           date.update(time)
+
+        due_date = datetime(**date)
+        time_remaining = ""
+        if test_date > due_date:
+          time_remaining += 'Deadline passed by'
+          passed_by = test_date - due_date
+
+          if passed_by.days > 0:
+            time_remaining += f" {passed_by.days} days,"
+
+          if (passed_by.total_seconds() / 3600) > 24:
+            # assignment's deadline passed past one day (3600 secs in 1hr)
+            # 86400 - number of seconds in a day. divide to find number of days 
+            # Then subtraction from days to get fraction of day remaining
+            # Fraction of day then converted to minutes by (24 * 60)
+            minutes_passed = ((passed_by.total_seconds() / 86400) - passed_by.days) * (24 * 60)
+          else:
+            minutes_passed = passed_by.total_seconds() / 60
+          if minutes_passed > 60:
+            # minutes_passed = 135
+            hrs = int(minutes_passed / 60)
+            minutes_passed = int(minutes_passed % 60)
+            time_remaining += f" {hrs} hrs,"
+          time_remaining += f" {minutes_passed} minutes"
+        else:
+          rem_time = due_date - test_date
+          if rem_time.days > 0:
+            time_remaining += f"{rem_time.days} days"
+          minutes_remaining = int(rem_time.total_seconds() // 60)
+          time_remaining += f"{minutes_remaining} minutes"
+      else:
+        time_remaining = 'No due time'
+      data = {'id': work['id'], 'courseId': work['courseId'], 'title': work['title'],
+              'description': work['description'], 'maxPoints': work['maxPoints'],
+              'time': time_remaining}
+      return data
     
     def get_grades(self, course_id):
       """ Returns grades for a certain unit"""

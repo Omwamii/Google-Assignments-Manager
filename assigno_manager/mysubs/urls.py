@@ -13,5 +13,6 @@ urlpatterns = [
         path('submit-assignment/', views.submit_assignment),
         path('add-to-calendar/', views.add_to_calendar),
         path('grades/<int:unit_id>/', views.grades),
-        path('send-private/', views.send_private_message)
+        path('send-private/', views.send_private_message),
+        path('assignment/<int:unit_id>/<int:work_id>/', views.assignment)
         ]

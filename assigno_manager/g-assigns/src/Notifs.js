@@ -67,12 +67,8 @@ function Notifs() {
             >
               <div className="card-header">{notif.time}</div>
               <div className="card-body text-info">
-                {/* <h5 class="card-title">Info card title</h5> */}
                 <p className="card-text">{notif.text}</p>
               </div>
-              {/* <div className="card-footer">
-          <small className="text-muted">{notif.time}</small>
-          </div> */}
             </div>
           ))}
       </div>

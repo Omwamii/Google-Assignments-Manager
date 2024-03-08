@@ -56,6 +56,11 @@ def assignments(_):
 
 
 @api_view(['GET'])
+def assignment(_, unit_id, work_id):
+    """ Get an assignment"""
+    return Response(app.get_assignment(unit_id, work_id))
+
+@api_view(['GET'])
 def units(_):
     """ Course units which the student has enrolled """
     return Response(app.get_courses())
