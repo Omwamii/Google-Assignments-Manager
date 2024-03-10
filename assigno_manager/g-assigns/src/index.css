@@ -18,3 +18,39 @@
     max-width: 700px !important;
     margin: 10px auto;
 }
+
+.assignment-view {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 70px;
+}
+
+.assignment {
+    max-width: 700px;
+    margin-bottom: 10px;
+}
+
+.card-deck {
+    height: 100%;
+}
+
+.pending {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    flex-direction: row;
+    padding: 8px;
+}
+
+.pending-work-btns {
+    padding-top: 7px;
+}
+
+#view {
+    margin-left: 10px;
+}
+
+button > a {
+    text-decoration: none;
+    color: white;
+}

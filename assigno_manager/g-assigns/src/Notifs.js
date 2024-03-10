@@ -6,7 +6,9 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 const url = 'http://localhost:8000/';
 
 function Notifs() {
-    // could add prop for id of course to fetch
+    // Fetch notifications from classroom & display
+    // prompts for unit to show notifications, fetch& display
+    
     const [notifs, setNotifs] = useState([]);
     const [showUnits, setShowUnits] = useState(true);
     const [units, setUnits] = useState([]);
