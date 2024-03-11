@@ -1,6 +1,4 @@
-import './index.css';
-
-import React from 'react'; // Import React
+import React from 'react';
 
 const Navbar = () => {
   return (
@@ -12,11 +10,11 @@ const Navbar = () => {
         <a className="navbar-brand me-3" href="#">
           Notifications
         </a>
-        <a className="navbar-brand me-3" href="#">
-          Submissions
-        </a>
         <a className="navbar-brand" href="#">
           Grades
+        </a>
+        <a className="navbar-brand me-3" href="#">
+          Your progress
         </a>
       </div>
     </nav>

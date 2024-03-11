@@ -5,8 +5,8 @@
 }
 
 .card {
-    min-width: 700px !important;
-    margin: 0 auto;
+    max-width: 800px !important;
+    margin: 12px auto;
 }
 
 .units {
@@ -39,7 +39,7 @@
     justify-content: space-between;
     flex-wrap: wrap;
     flex-direction: row;
-    padding: 8px;
+    padding: 5px;
 }
 
 .pending-work-btns {
@@ -53,4 +53,42 @@
 button > a {
     text-decoration: none;
     color: white;
+}
+
+.grade-view {
+    max-width: 800px;
+    margin: 30px auto;
+}
+
+.p-fieldset-legend {
+    max-width: 140px;
+    height: 60px;
+    position: absolute;
+    left: 2%;
+    top: -10%;
+    font-weight: 400;
+    font-size: 18px;
+    vertical-align: middle;
+    text-align: center;
+    padding-top: 13px;
+}
+
+#notifs {
+    margin: 32px auto;
+}
+
+.p-fileupload-content {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.unit-btn {
+    width: 700px;
+    height: 100px;
+    margin: 10px auto;
+    border-radius: 20px;
+}
+
+.app-content {
+    margin-top: 55px;
 }
