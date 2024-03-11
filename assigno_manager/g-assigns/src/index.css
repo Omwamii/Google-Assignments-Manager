@@ -92,3 +92,14 @@ button > a {
 .app-content {
     margin-top: 55px;
 }
+
+/* .card > .chart {
+    width: 90%;
+    height: 90%;
+} */
+
+#chart {
+    width: 80%;
+    height: 80%;
+    margin: 0 auto;
+}

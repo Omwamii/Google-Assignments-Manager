@@ -337,4 +337,17 @@ const submissions = [
         }
     }
 ]
-export  { units, currentWork, pendingWork, grades, notifs, submissions }
+
+const stats = {
+        "CSC_319": 80,
+        "CSC315": 75,
+        "CSC311": 74,
+        "CSC314": 85,
+        "CSC 316": 65,
+        "CSC 318": 68,
+        "CSC228": 34,
+        "2023": 45,
+        'more': 87,
+        "even": 97
+}
+export  { units, currentWork, pendingWork, grades, notifs, submissions, stats }

@@ -11,6 +11,7 @@ import Grades from './Grades';
 import Home from './Home';
 import Navbar from './Navbar';
 import Notifs from './Notifs';
+import Stats from './Stats';
 
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -19,7 +20,8 @@ function App() {
     <div className="App">
       <Navbar />
       <div className="app-content">
-        <Grades />
+      <Stats />
+        {/* <Grades /> */}
         {/* <Home /> */}
         {/* <Notifs /> */}
       </div>
