@@ -1,7 +1,7 @@
 """ api function-based views """
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .auth import App
+from .app import App
 
 """
 Test units
@@ -97,14 +97,6 @@ def get_notifications(_, unit_id):
     """ Get actions needed (notifs) """
     return Response(app.get_notifications(unit_id))
 
-@api_view(['POST'])
-def send_private_message(_):
-    """ Send lectuter private message.
-        Attach coursework/Assignment context? 
-    """
-    pass
-
-
 @api_view(['GET'])
 def undo_submit(_):
     """ reclaim work submission """
@@ -116,3 +108,8 @@ def grades(_, unit_id):
     """ get grades for a unit"""
     return Response(app.get_grades(unit_id))
 
+
+@api_view(['GET'])
+def stats(_):
+    """ Get average grades per unit for chart display"""
+    return Response(app.get_unit_avg())

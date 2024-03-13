@@ -1,80 +1,19 @@
 #!/usr/bin/env python3
 """ Module to implement O-Auth for the app
 """
-import os.path
-
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload
+import os.path
+from os import environ as env
+import json
 from datetime import datetime
 from typing import List
-from .models import Notification
+# from .models import Notification
+from .regex import get_course_code
+from .base import Base
 
 
-
-class App:
-    """ Oauth implementation for logins & API resources initialization"""
-    creds = None
-    flow = None
-    data = None
-    _id = 114502058831176393158
-
-    # add memoization
-    # If modifying these scopes, delete the file token.json.
-    _SCOPES = [
-      "https://www.googleapis.com/auth/classroom.courses.readonly",
-      "https://www.googleapis.com/auth/classroom.announcements",
-      "https://www.googleapis.com/auth/classroom.course-work.readonly",
-      "https://www.googleapis.com/auth/classroom.student-submissions.me.readonly",
-      "https://www.googleapis.com/auth/classroom.announcements.readonly",
-      "https://www.googleapis.com/auth/classroom.addons.student",
-      "https://www.googleapis.com/auth/classroom.push-notifications",
-      "https://www.googleapis.com/auth/userinfo.profile",
-      "https://www.googleapis.com/auth/drive.file"
-      ]
-
-
-    def __init__(self):
-      """ Initialize Oauth login for each instance (self.creds)
-          Avail service to fetch resources e.g courses, assignments (self.service)
-      """
-      if os.path.exists("token.json"):
-        # The file token.json stores the user's access and refresh tokens, and is
-        # created automatically when the authorization flow completes for the first
-        # time.
-        self.creds = Credentials.from_authorized_user_file('token.json', self._SCOPES)
-
-      if not self.creds or not self.creds.valid:
-        if self.creds and self.creds.expired and self.creds.refresh_token:
-          self.creds.refresh(Request())
-        else:
-            # credentials file was downloaded to root from google cloud console credentials
-            self.flow = InstalledAppFlow.from_client_secrets_file("credentials.json", self._SCOPES)
-            self.creds = self.flow.run_local_server(port=8080)
-        
-        with open("token.json", "w") as token:
-          token.write(self.creds.to_json())
-
-      try:
-        # setup google classroom api
-        self.service = build("classroom", "v1", credentials=self.creds)
-      except HttpError as error:
-        # Error with classroom API
-        print(f"Classroom API error: {error}")
-      else:
-        # calling classroom API to fetch course data
-        self.data = self.service.courses().list().execute()
-
-      try:
-        # setup google drive api
-        self.drive = build("drive", "v3", credentials=self.creds)
-      except HttpError as error:
-        # Error with google drive api
-        print(f"Drive API error: {error}")
-    
+class App(Base):
+    """ App functionalities """
     def get_courses(self):
       """ Return all courses student is enrolled in """
       # return self.data.get('courses', [])
@@ -160,26 +99,10 @@ class App:
                                                                                         courseWorkId=course_work_id,
                                                                                         id=self._id).execute()
     
-    def upload_file(self):
-      """ Upload a file to google drive """
-      file_metadata = {"title": "download.jpeg"}
-      media = MediaFileUpload("download.jpeg", mimetype="image/jpeg")
-      # pylint: disable=maybe-no-member
-      # file = (
-      #    self.drive.files().create(body=file_metadata, media_body=media, fields="id, title, alternateLink, thumbnailUrl").execute()
-      # )
-      file = self.drive.files().list().execute()
-      return file
 
-    def get_file(self, file_id: str) -> str:
-      """ Get file from drive """
-      if not file_id:
-        return {}
-      return self.drive.files().get(fileId=file_id, fields='id,name,thumbnailLink,webViewLink').execute()
-    
     def get_pending_work(self):
       """ Return pending assignments for all units """
-      courses = self.get_courses()
+      courses = self.data.get('courses', [])
       pending = list()
       for course in courses:
         if course['courseState'] != 'ACTIVE':
@@ -196,7 +119,7 @@ class App:
              d_time = datetime(d_time['year'], d_time['month'], d_time['day'])
           pending_work = {
             'id': work['id'], 'unit': unit_name, 'title': work.get('title'), 'classLink': work['alternateLink'],
-            'points': work.get('maxPoints'), 'dueTime': d_time
+            'points': work.get('maxPoints'), 'dueTime': d_time if d_time else ' No due time', 'courseId': course['id']
           }
           if not d_time:
             # work does not have due date
@@ -208,15 +131,10 @@ class App:
       return pending
     
     def get_assignment(self, unit_id: int, course_work_id: int) -> str:
-      """ Return a specific assignment """
-      test_d = {
-        'year': 2023,
-        'month': 11,
-        'day': 29,
-        'hour': 10,
-        'minute': 30
-      }
-      test_date = datetime(**test_d)
+      """ Return a specific assignment
+          Fav part hehe
+      """
+      today_t = datetime.now()
   
       work = self.service.courses().courseWork().get(
         courseId=unit_id, id=course_work_id).execute()
@@ -229,9 +147,9 @@ class App:
 
         due_date = datetime(**date)
         time_remaining = ""
-        if test_date > due_date:
+        if today_t > due_date:
           time_remaining += 'Deadline passed by'
-          passed_by = test_date - due_date
+          passed_by = today_t - due_date
 
           if passed_by.days > 0:
             time_remaining += f" {passed_by.days} days,"
@@ -251,15 +169,15 @@ class App:
             time_remaining += f" {hrs} hrs,"
           time_remaining += f" {minutes_passed} minutes"
         else:
-          rem_time = due_date - test_date
+          rem_time = due_date - today_t
           if rem_time.days > 0:
             time_remaining += f"{rem_time.days} days"
           minutes_remaining = int(rem_time.total_seconds() // 60)
           time_remaining += f"{minutes_remaining} minutes"
       else:
         time_remaining = 'No due time'
-      data = {'id': work['id'], 'courseId': work['courseId'], 'title': work['title'],
-              'description': work['description'], 'maxPoints': work['maxPoints'],
+      data = {'id': work['id'], 'courseId': work['courseId'], 'title': work.get('title'),
+              'description': work.get('description'), 'maxPoints': work.get('maxPoints'),
               'time': time_remaining}
       return data
     
@@ -269,11 +187,60 @@ class App:
       grades = list()
       for work in c_work:
         sub = self.get_submission(course_id, work.get('id', None))
-        res = {'title': work.get('title'), 'link': work.get('alternateLink'),
+        res = {'id': work.get('id'), 'title': work.get('title'), 'link': work.get('alternateLink'),
                'maxPoints': work.get('maxPoints'), 'grade': sub.get('assignedGrade')
                }
         grades.append(res)
       return grades
+    
+    def get_unit_avg(self):
+      """ Get average grades per unit
+          Issue: most units have unassigned grades, for display
+          sample data is used and can be changed by using env variables
+      """
+      avg_grades = list()
+      if env.get('USE_DATA') == 'real':
+        # use real student data
+        units = self.get_courses()
+        for unit in units:
+          avg, work_count = 0, 0
+          grades = self.get_grades(unit['id'])
+          for grade in grades:
+            if grade['grade'] is None:
+              # work not assigned a grade
+              continue
+            avg += ( grade['grade'] / grade['maxPoints']) * 100 # get percentage
+            work_count += 1
+          if avg != 0:
+            avg = int(avg / work_count)
+            data = {'unit': get_course_code(unit['name']), 'avg': avg}
+            avg_grades.append(data)
+      else:
+        # use dummy data for display test
+        with open('mysubs/dummy.json', 'r') as f:
+          stats = json.load(f)
+          for key, val in stats.items():
+            data = {'unit': get_course_code(key), 'avg': val}
+            avg_grades.append(data)
+      return avg_grades
+
+    def upload_file(self):
+      """ Upload a file to google drive """
+      file_metadata = {"title": "download.jpeg"}
+      media = MediaFileUpload("download.jpeg", mimetype="image/jpeg")
+      # pylint: disable=maybe-no-member
+      # file = (
+      #    self.drive.files().create(body=file_metadata, media_body=media, fields="id, title, alternateLink, thumbnailUrl").execute()
+      # )
+      file = self.drive.files().list().execute()
+      return file
+
+    def get_file(self, file_id: str) -> str:
+      """ Get file from drive """
+      if not file_id:
+        return {}
+      return self.drive.files().get(fileId=file_id, fields='id,name,thumbnailLink,webViewLink').execute()
+    
 
 if __name__ == "__main__":
   app = App()  # For testing to separate auth errors from app errors

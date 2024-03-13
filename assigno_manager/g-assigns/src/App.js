@@ -7,6 +7,8 @@ import 'primeflex/primeflex.css';
 import './App.css';
 import './index.css';
 
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
 import Grades from './Grades';
 import Home from './Home';
 import Navbar from './Navbar';
