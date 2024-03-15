@@ -1,6 +1,5 @@
 .notifications {
     padding-top: 15px;
-    /* background-color: #5b54a1; */
     height: 100%;
 }
 
@@ -93,13 +92,12 @@ button > a {
     margin-top: 55px;
 }
 
-/* .card > .chart {
-    width: 90%;
-    height: 90%;
-} */
-
 #chart {
     width: 80%;
     height: 80%;
-    margin: 0 auto;
+    margin: 60px auto 10px;
+}
+
+#mark-done {
+    margin-left: 7px;
 }

@@ -2,6 +2,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .app import App
+from .models import MarksAsDone
 
 """
 Test units
@@ -66,24 +67,19 @@ def units(_):
     return Response(app.get_courses())
 
 
-@api_view(['GET'])
-def submit_assignment(_):
+@api_view(['POST'])
+def submit_assignment(request):
     """ View to Submit an assignment
         will need drive api &
         Get ids from request frontend & use ids to submit collection of files 
     """
-    # file = app.upload_file()
-    file = app.get_file('1wiO5zDrWsSw5BXhjx1WCLeuYp9iR4ztY')
-    # after adding files to drive, store added files to list, use ids to retrieve files & 
-    # to attachments object 
-    # Assignment submission file
-    data = {"driveFile": {'id': file.get('id', None),
-            'title': file.get('name', None),
-            'alternateLink': file.get('webViewLink', None),
-            'thumbnailUrl': file.get('thumbnailLink', None)}
-            }
-    # For file download request webContentLink from file metadata (through app instance)
-    return Response(data)
+    file_s = request.FILES.getlist('file')
+    print(f"File(s) {file_s}")
+    for file in file_s:
+        # print(f"name: {file.name}")
+        # print(f"Mime type: {file.content_type}")
+        app.upload_file(file.name, file.content_type, file.read())
+    return Response('success!!')
 
 
 @api_view(['POST'])
@@ -113,3 +109,15 @@ def grades(_, unit_id):
 def stats(_):
     """ Get average grades per unit for chart display"""
     return Response(app.get_unit_avg())
+
+@api_view(['POST'])
+def markdone(request):
+    """ Mark an assignment as done
+        Work without due time has to be marked as done to take them off the list of due work
+    """
+    work_id = request.POST.get('id')
+    course_id = request.POST.get('course_id')
+    work_marked_obj = MarksAsDone.objects.create(work_id=work_id, course_id=course_id)
+    if work_marked_obj:
+        return Response({'message': 'Work marked as done successfully', 'error': False})
+    return Response({'message': 'Error marking work as done', 'error': True})

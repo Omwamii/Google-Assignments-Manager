@@ -4,13 +4,14 @@
 from googleapiclient.http import MediaFileUpload
 import os.path
 from os import environ as env
+from os import remove as delete_file
 import json
 from datetime import datetime
 from typing import List
 # from .models import Notification
 from .regex import get_course_code
 from .base import Base
-
+from .models import MarksAsDone
 
 class App(Base):
     """ App functionalities """
@@ -117,6 +118,14 @@ class App(Base):
           d_time = work.get('dueDate', None)
           if d_time:
              d_time = datetime(d_time['year'], d_time['month'], d_time['day'])
+          else:
+            # Before appending work as due, check if had been marked as done
+            try:
+              _ = MarksAsDone.objects.get(work_id=work['id'], course_id=course['id'])
+            except Exception:
+              pass
+            else:
+              continue
           pending_work = {
             'id': work['id'], 'unit': unit_name, 'title': work.get('title'), 'classLink': work['alternateLink'],
             'points': work.get('maxPoints'), 'dueTime': d_time if d_time else ' No due time', 'courseId': course['id']
@@ -199,7 +208,7 @@ class App(Base):
           sample data is used and can be changed by using env variables
       """
       avg_grades = list()
-      if env.get('USE_DATA') == 'real':
+      if env.get('USE_CHART_DATA') == 'REAL':
         # use real student data
         units = self.get_courses()
         for unit in units:
@@ -217,23 +226,26 @@ class App(Base):
             avg_grades.append(data)
       else:
         # use dummy data for display test
-        with open('mysubs/dummy.json', 'r') as f:
+        with open('mysubs/data/stats.json', 'r') as f:
           stats = json.load(f)
           for key, val in stats.items():
             data = {'unit': get_course_code(key), 'avg': val}
             avg_grades.append(data)
       return avg_grades
 
-    def upload_file(self):
-      """ Upload a file to google drive """
-      file_metadata = {"title": "download.jpeg"}
-      media = MediaFileUpload("download.jpeg", mimetype="image/jpeg")
-      # pylint: disable=maybe-no-member
-      # file = (
-      #    self.drive.files().create(body=file_metadata, media_body=media, fields="id, title, alternateLink, thumbnailUrl").execute()
-      # )
-      file = self.drive.files().list().execute()
-      return file
+
+    def upload_file(self, file_name, mime_type, file_data):
+      """ Upload a file to Google Drive."""
+      file_metadata = {'name': file_name}
+      f = open(file_name, 'wb')
+      f.write(file_data)
+      f.close()
+      media = MediaFileUpload(file_name, mimetype=mime_type, resumable=True)
+      file = self.drive.files().create(
+        body=file_metadata, media_body=media, fields='id').execute()
+      delete_file(file_name)
+      print(f"Uploaded file with ID: {file.get('id')}")
+      return file.get('id')
 
     def get_file(self, file_id: str) -> str:
       """ Get file from drive """

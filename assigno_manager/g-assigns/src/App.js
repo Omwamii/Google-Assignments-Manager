@@ -7,28 +7,26 @@ import 'primeflex/primeflex.css';
 import './App.css';
 import './index.css';
 
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Grades from './Grades';
 import Home from './Home';
 import Navbar from './Navbar';
 import Notifs from './Notifs';
 import Stats from './Stats';
-
-// import 'bootstrap/dist/css/bootstrap.min.css';
+import NoPage from './NoPage';
 
 function App() {
   return (
-    <div className="App">
-      <Navbar />
-      <div className="app-content">
-      <Stats />
-        {/* <Grades /> */}
-        {/* <Home /> */}
-        {/* <Notifs /> */}
-      </div>
-    </div>
-  );
+    <BrowserRouter>
+      <Routes>
+        <Route index element={<Home />}></Route>
+        <Route path="/notifications" element={<Notifs />}></Route>
+        <Route path="/grades" element={<Grades />}></Route>
+        <Route path="/stats" element={<Stats />}></Route>
+        <Route path="*" element={<NoPage />} />
+      </Routes>
+    </BrowserRouter>
+  )
 }
-
 export default App;

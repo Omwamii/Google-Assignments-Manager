@@ -1,14 +1,10 @@
 from django.db import models
 
-# most Models not necessary -> Classroom API utilized for data
+# most Models not necessary since Classroom API is utilized for data
 
-# class Notification(models.Model):
-#     """ Notifications on google classroom
-#         Reason: enable identifying notification as 'read' or seen
-#         since API not providing the option
-#     """
-#     id = models.CharField(max_length=50, primary_key=True)
-#     courseId = models.CharField(max_length=50)
-#     text = models.TextField()
-#     publish_date = models.DateField()
-#     seen = models.BooleanField(default=False)
+class MarksAsDone(models.Model):
+    """ Enable marking work without due time as done
+        Work without due time is assigned as pending work in app
+    """
+    work_id = models.CharField(max_length=50, primary_key=True)
+    course_id = models.CharField(max_length=50)

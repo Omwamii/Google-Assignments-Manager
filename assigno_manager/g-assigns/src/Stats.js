@@ -41,6 +41,7 @@
 import React, { useState, useEffect } from 'react';
 import { Chart } from 'primereact/chart';
 import { stats } from './data';
+import Navbar from './Navbar';
 
 export default function Stats() {
     const labels = Object.keys(stats);
@@ -86,8 +87,11 @@ export default function Stats() {
   };
 
     return (
-        <div id='chart'>
+      <div>
+        <Navbar />
+        <div id='chart' className='app-content'>
             <Chart type="bar" data={chartData} options={chartOptions} />
         </div>
+      </div>
     )
 }

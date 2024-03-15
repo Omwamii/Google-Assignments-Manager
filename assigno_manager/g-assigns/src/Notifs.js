@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'; // Import Bootstrap CSS
 import { units, notifs } from './data';
 import { Fieldset } from 'primereact/fieldset';
 import { Button } from 'primereact/button';
+import Navbar from './Navbar';
 
 const url = 'http://localhost:8000/';
 
@@ -55,7 +56,9 @@ function Notifs() {
       setShowNotifs(false)
     };
     return (
-      <div className="notifications">
+      <div>
+        <Navbar />
+        <div className="notifications app-content">
         <div className="units">
           {showUnits &&
             units.map((unit) => (
@@ -75,6 +78,7 @@ function Notifs() {
               </Fieldset>
             </div>
           ))}
+      </div>
       </div>
     );
 }

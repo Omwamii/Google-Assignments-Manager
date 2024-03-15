@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 import { units, grades } from './data';
-import { Paginator } from 'primereact/paginator';
+
+import Navbar from './Navbar';
 
 const url = 'http://localhost:8000/';
 
@@ -61,8 +62,10 @@ function Grades() {
      }
 
     return (
-      <div className="grades">
-        <div className="units">
+      <div>
+        <Navbar />
+        <div className="grades">
+        <div className="units app-content">
           {showUnits &&
             units.map((unit) => (
               <Button
@@ -87,6 +90,7 @@ function Grades() {
             <Button label="Go back" onClick={exitUnitGrade} />
           </div>
         )}
+      </div>
       </div>
     );
 }

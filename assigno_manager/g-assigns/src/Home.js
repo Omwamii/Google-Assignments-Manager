@@ -3,6 +3,7 @@ import axios from 'axios';
 import { FileUpload } from 'primereact/fileupload';
 import { Card } from 'primereact/card';
 import { pendingWork, currentWork} from './data';
+import Navbar from './Navbar';
 
 
 const url = 'http://localhost:8000/';
@@ -62,10 +63,14 @@ function Home() {
     setShowCurrentWork(false);
   }
 
+  const markAsDone = () => {
+    console.log('work marked as done');
+  }
   return (
     <div>
+      <Navbar />
       {showPendingWork && (
-        <div className="pending">
+        <div className="pending app-content">
           {pendingWork.map((pending) => (
             <div className="card assignment" key={pending.id}>
               <div className="card-body">
@@ -82,10 +87,26 @@ function Home() {
                     View work
                   </button>
                   <button type="button" className="btn btn-primary" id="view">
-                    <a href={pending.classLink} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={pending.classLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       View in classroom
                     </a>
                   </button>
+                  {pending.dueTime === " No due time" ? (
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      id="mark-done"
+                      onClick={() => markAsDone(pending.id, pending.courseId)}
+                    >
+                      Mark as done
+                    </button>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
               <div className="card-footer">
@@ -96,7 +117,7 @@ function Home() {
         </div>
       )}
       {showCurrentWork && (
-        <div className="assignment-view">
+        <div className="assignment-view app-content">
           <div className="card assignment">
             <div className="card-header">{currentWork.title}</div>
             <div className="card-body">
@@ -116,12 +137,11 @@ function Home() {
           <div className="card" id="files">
             <div className="card-header">Files</div>
             <div className="card-body">
-            
               <FileUpload
-                name="demo[]"
-                url={"/api/upload"}
+                name="file"
+                url={`${url}submit-assignment/`}
                 multiple
-                accept="image/*"
+                accept="*/*"
                 maxFileSize={1000000}
                 emptyTemplate={
                   <p className="m-0">Drag and drop files to here to upload.</p>
