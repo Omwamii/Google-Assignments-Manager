@@ -139,7 +139,7 @@ function Home() {
             <div className="card-body">
               <FileUpload
                 name="file"
-                url={`${url}submit-assignment/`}
+                url={`${url}submit-assignment/${currentWorkId}/`}
                 multiple
                 accept="*/*"
                 maxFileSize={1000000}
