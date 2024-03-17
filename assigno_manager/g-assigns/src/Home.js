@@ -4,6 +4,7 @@ import { FileUpload } from 'primereact/fileupload';
 import { Card } from 'primereact/card';
 import { pendingWork, currentWork} from './data';
 import Navbar from './Navbar';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 
 const url = 'http://localhost:8000/';
@@ -121,13 +122,7 @@ function Home() {
           <div className="card assignment">
             <div className="card-header">{currentWork.title}</div>
             <div className="card-body">
-              <button
-                type="button"
-                className="btn btn-primary"
-                onClick={exitView}
-              >
-                Go back
-              </button>
+              <FontAwesomeIcon icon="fa-solid fa-arrow-left" onClick={exitView} />
               <p className="card-text">{currentWork.description}</p>
             </div>
             <div className="card-footer">
@@ -137,9 +132,10 @@ function Home() {
           <div className="card" id="files">
             <div className="card-header">Files</div>
             <div className="card-body">
+            {/* Add functionality to upload link as assignment & also add links to file resources*/}
               <FileUpload
                 name="file"
-                url={`${url}submit-assignment/${currentWorkId}/`}
+                url={`${url}submit-assignment/${currentUnitId}/${currentWorkId}/`}
                 multiple
                 accept="*/*"
                 maxFileSize={1000000}
