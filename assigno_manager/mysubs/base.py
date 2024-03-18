@@ -25,6 +25,7 @@ class Base():
       "https://www.googleapis.com/auth/classroom.announcements.readonly",
       "https://www.googleapis.com/auth/classroom.addons.student",
       "https://www.googleapis.com/auth/classroom.push-notifications",
+      "https://www.googleapis.com/auth/classroom.coursework.me",
       "https://www.googleapis.com/auth/userinfo.profile",
       "https://www.googleapis.com/auth/drive.file"
       ]

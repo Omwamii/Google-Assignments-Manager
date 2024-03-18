@@ -51,6 +51,10 @@ def submissions(_, unit_id):
 
 
 @api_view(['GET'])
+def submission(_, unit_id, work_id):
+    return Response(app.get_submission(unit_id, work_id))
+
+@api_view(['GET'])
 def assignments(_):
     """ Return pending assignments """
     return Response(app.get_pending_work())
@@ -60,6 +64,8 @@ def assignments(_):
 def assignment(_, unit_id, work_id):
     """ Get an assignment"""
     return Response(app.get_assignment(unit_id, work_id))
+    # return Response(app.get_submission_id(unit_id, work_id))
+
 
 @api_view(['GET'])
 def units(_):
@@ -68,24 +74,32 @@ def units(_):
 
 
 @api_view(['POST'])
-def submit_assignment(request):
+def submit_assignment(request, course_id, work_id):
     """ View to Submit an assignment
         will need drive api &
         Get ids from request frontend & use ids to submit collection of files 
     """
     file_s = request.FILES.getlist('file')
-    print(f"File(s) {file_s}")
+    # print(f"File(s) {file_s}")
+    if app.work_was_turned_in(course_id, work_id):
+        app.unsubmit_assignment(course_id, work_id)
     for file in file_s:
-        # print(f"name: {file.name}")
-        # print(f"Mime type: {file.content_type}")
-        app.upload_file(file.name, file.content_type, file.read())
-    return Response('success!!')
+        # upload  file to google drive & get file id
+        drive_file_id = app.upload_file(file.name, file.content_type, file.read())
+        # add file as attachment to submission
+        app.add_attachment(drive_file_id, course_id, work_id)
+    return Response(app.turn_in_assignment(course_id, work_id)) # turn in work
 
 
-@api_view(['POST'])
-def add_to_calendar(_):
+@api_view(['GET'])
+def unsubmit_assignment(_, course_id, work_id):
+    """ Unsubmit an assignment """
+    return Response(app.unsubmit_assignment(course_id, work_id))
+
+@api_view(['GET'])
+def add_to_calendar(_, unit_id, work_id):
     """ Add assignment due date to calendar """
-    pass
+    return Response(app.work_was_turned_in(unit_id, work_id))
 
 
 @api_view(['GET'])
