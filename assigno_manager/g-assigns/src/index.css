@@ -103,5 +103,14 @@ button > a {
 }
 
 .p-progress-spinner {
-    margin: 100px auto;
+    margin: 200px 65px 20px 700px; 
+}
+
+.arrow {
+    margin-left: 50px;
+    transition: transform 0.3s ease;
+}
+
+.arrow:hover {
+    transform: scale(1.2);
 }

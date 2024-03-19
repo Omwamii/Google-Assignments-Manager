@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FileUpload } from 'primereact/fileupload';
 import Navbar from './Navbar';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ProgressSpinner } from 'primereact/progressspinner';
+import { ArrowLeft } from 'react-bootstrap-icons';
 
 
 const url = 'http://localhost:8000/';
@@ -12,6 +12,7 @@ function Home() {
   // Return: pending assignments
   // Add button to view submitted work in classroom if user had submitted some work?
 
+  const [isLoading, setIsLoading] = useState(true);
   const [pendingWork, setPendingWork] = useState([]);
   const [showPendingWork, setShowPendingWork] = useState(true);
   const [currentWorkId, setCurrentWorkId] = useState(0);
@@ -25,6 +26,7 @@ function Home() {
         const fullUrl = `${url}assignments/`;
         const data = await axios.get(fullUrl);
         setPendingWork(data.data);
+        setIsLoading(false)
       } catch (err) {
         console.error(err);
       }
@@ -41,6 +43,7 @@ function Home() {
           const full_url = `${url}assignment/${currentUnitId}/${currentWorkId}/`;
           const data = await axios.get(full_url);
           setCurrentWork(data.data); 
+          setIsLoading(false); // data is ready
         } catch (err) {
           console.error(err);
         }
@@ -50,6 +53,7 @@ function Home() {
 
   const viewWork = (workId, courseId) => {
     // go to assignment page
+    setIsLoading(true);
     setCurrentWorkId(workId);
     setCurrentUnitId(courseId);
     setShowPendingWork(false);
@@ -68,11 +72,20 @@ function Home() {
   const markAsDone = () => {
     console.log('work marked as done');
   }
+
+  if (isLoading) {
+    return (
+      <div>
+        <Navbar />
+        <div className="app-content">
+          <ProgressSpinner />
+        </div>
+      </div>
+    );
+  }
   return (
     <div>
       <Navbar />
-      {/* <ProgressSpinner /> */}
-      <FontAwesomeIcon icon="fa-solid fa-arrow-left" onClick={exitView} />
       {showPendingWork &&
         (pendingWork ? (
           <div className="pending app-content">
@@ -128,13 +141,10 @@ function Home() {
         ))}
       {showCurrentWork && (currentWork ? (
         <div className="assignment-view app-content">
+        <ArrowLeft color="crimson" size={65} onClick={exitView} className='arrow'/>
           <div className="card assignment">
             <div className="card-header">{currentWork.title}</div>
-            <div className="card-body">
-              <FontAwesomeIcon
-                icon="fa-solid fa-arrow-left"
-                onClick={exitView}
-              />
+            <div className="card-body">       
               <p className="card-text">{currentWork.description}</p>
             </div>
             <div className="card-footer">

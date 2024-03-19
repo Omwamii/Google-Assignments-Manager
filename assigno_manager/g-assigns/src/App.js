@@ -11,7 +11,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Grades from './Grades';
 import Home from './Home';
-import Navbar from './Navbar';
 import Notifs from './Notifs';
 import Stats from './Stats';
 import NoPage from './NoPage';
