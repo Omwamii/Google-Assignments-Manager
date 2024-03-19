@@ -61,15 +61,7 @@ class Course(Base):
       return notifications
     
 
-    def get_submission(self, course_id: int, coursework_id: int) -> str:
-      """ Return a submission for a coursework """
-      # possible issue: studentSubmisions being an array, above code assumes 
-      # there's always one submission for a coursework assigned a grade..
-
-      return self.service.courses().courseWork().studentSubmissions().list(
-        courseId=course_id,
-        courseWorkId=coursework_id
-      ).execute().get('studentSubmissions')[0]
+    
     
     def get_unit_submissions(self, course_id: int) -> str:
       """ Return student submissions for a unit
@@ -81,7 +73,7 @@ class Course(Base):
       for work in coursework:
         res = self.get_submission(course_id, work['id'])
         print(res)
-        if not res.get('assignmentSubmission'):
+        if not res:
           # Could be a group submission, not your submission
           # continue
           print('No submission')
@@ -93,6 +85,27 @@ class Course(Base):
                }
         submissions.append(data)
       return submissions
+
+
+    def get_submission_id(self, course_id: int, course_work_id: int) -> str:
+      """ Get work submission id"""
+      subs = self.service.courses().courseWork().studentSubmissions().list(
+        courseId=course_id,
+        courseWorkId=course_work_id
+        ).execute().get('studentSubmissions')[0]
+      return subs.get('id')
+    
+    
+    def get_submission_files(self, course_id: int, course_work_id: int) -> str:
+      """ Return a submission for a coursework """
+      # possible issue: studentSubmisions being an array, above code assumes 
+      # there's always one submission for a coursework assigned a grade..
+      submission_id = self.get_submission_id(course_id, course_work_id)
+      return self.service.courses().courseWork().studentSubmissions().get(
+        courseId=course_id,
+        courseWorkId=course_work_id,
+        id=submission_id
+      ).execute().get('assignmentSubmission')
 
     def get_pending_work(self):
       """ Return pending assignments for all units """
@@ -120,7 +133,6 @@ class Course(Base):
             else:
               print('Marked as done')
               continue
-          print(f"Mod mode {work.get('submissionModificationMode')}")
           pending_work = {
             'id': work['id'], 'unit': unit_name, 'title': work.get('title'), 'classLink': work['alternateLink'],
             'points': work.get('maxPoints'), 'dueTime': d_time if d_time else ' No due time', 'courseId': course['id']
@@ -132,6 +144,11 @@ class Course(Base):
             if d_time > datetime.now():
               # deadline for assignment not reached yet
               pending.append(pending_work)
+            else:
+              files = self.get_submission_files(course['id'], work['id'])
+              if len(files) == 0:
+                # try submitting work (no submission)
+                pending.append(pending_work)
             # issue: API does not provide fnality to check late work policy
             # so can't append work past due but submissions allowed
       return pending
@@ -185,6 +202,12 @@ class Course(Base):
               'description': work.get('description'), 'maxPoints': work.get('maxPoints'),
               'time': time_remaining}
       return data
+    
+    def get_submission(self, course_id, course_work_id):
+      return self.service.courses().courseWork().studentSubmissions().list(
+        courseId=course_id,
+        courseWorkId=course_work_id
+      ).execute()[0]
     
     def get_grades(self, course_id):
       """ Returns grades for a certain unit"""

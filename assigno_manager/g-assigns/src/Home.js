@@ -3,6 +3,7 @@ import axios from 'axios';
 import { FileUpload } from 'primereact/fileupload';
 import Navbar from './Navbar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { ProgressSpinner } from 'primereact/progressspinner';
 
 
 const url = 'http://localhost:8000/';
@@ -61,6 +62,7 @@ function Home() {
     setCurrentUnitId(0);
     setShowPendingWork(true);
     setShowCurrentWork(false);
+    setCurrentWork([]);
   }
 
   const markAsDone = () => {
@@ -69,59 +71,70 @@ function Home() {
   return (
     <div>
       <Navbar />
-      {showPendingWork && (
-        <div className="pending app-content">
-          {pendingWork.map((pending) => (
-            <div className="card assignment" key={pending.id}>
-              <div className="card-body">
-                <h5 className="card-title">{pending.unit}</h5>
-                <p className="card-text">
-                  {pending.title} {pending.points && `(${pending.points} pts)`}
-                </p>
-                <div className="pending-work-btns">
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={() => viewWork(pending.id, pending.courseId)}
-                  >
-                    View work
-                  </button>
-                  <button type="button" className="btn btn-primary" id="view">
-                    <a
-                      href={pending.classLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      View in classroom
-                    </a>
-                  </button>
-                  {pending.dueTime === " No due time" ? (
+      {/* <ProgressSpinner /> */}
+      <FontAwesomeIcon icon="fa-solid fa-arrow-left" onClick={exitView} />
+      {showPendingWork &&
+        (pendingWork ? (
+          <div className="pending app-content">
+            {pendingWork.map((pending) => (
+              <div className="card assignment" key={pending.id}>
+                <div className="card-body">
+                  <h5 className="card-title">{pending.unit}</h5>
+                  <p className="card-text">
+                    {pending.title}{" "}
+                    {pending.points && `(${pending.points} pts)`}
+                  </p>
+                  <div className="pending-work-btns">
                     <button
                       type="button"
-                      className="btn btn-secondary"
-                      id="mark-done"
-                      onClick={() => markAsDone(pending.id, pending.courseId)}
+                      className="btn btn-primary"
+                      onClick={() => viewWork(pending.id, pending.courseId)}
                     >
-                      Mark as done
+                      View work
                     </button>
-                  ) : (
-                    ""
-                  )}
+                    <button type="button" className="btn btn-primary" id="view">
+                      <a
+                        href={pending.classLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View in classroom
+                      </a>
+                    </button>
+                    {pending.dueTime === " No due time" ? (
+                      <button
+                        type="button"
+                        className="btn btn-secondary"
+                        id="mark-done"
+                        onClick={() => markAsDone(pending.id, pending.courseId)}
+                      >
+                        Mark as done
+                      </button>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                </div>
+                <div className="card-footer">
+                  <small className="text-muted">
+                    Due in: {pending.dueTime}
+                  </small>
                 </div>
               </div>
-              <div className="card-footer">
-                <small className="text-muted">Due in: {pending.dueTime}</small>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-      {showCurrentWork && (
+            ))}
+          </div>
+        ) : (
+          <ProgressSpinner />
+        ))}
+      {showCurrentWork && (currentWork ? (
         <div className="assignment-view app-content">
           <div className="card assignment">
             <div className="card-header">{currentWork.title}</div>
             <div className="card-body">
-              <FontAwesomeIcon icon="fa-solid fa-arrow-left" onClick={exitView} />
+              <FontAwesomeIcon
+                icon="fa-solid fa-arrow-left"
+                onClick={exitView}
+              />
               <p className="card-text">{currentWork.description}</p>
             </div>
             <div className="card-footer">
@@ -131,7 +144,7 @@ function Home() {
           <div className="card" id="files">
             <div className="card-header">Files</div>
             <div className="card-body">
-            {/* Add functionality to upload link as assignment & also add links to file resources*/}
+              {/* Add functionality to upload link as assignment & also add links to file resources*/}
               <FileUpload
                 name="file"
                 url={`${url}submit-assignment/${currentUnitId}/${currentWorkId}/`}
@@ -150,6 +163,8 @@ function Home() {
             </div>
           </div>
         </div>
+      ) : (<ProgressSpinner />)
+        
       )}
     </div>
   );

@@ -44,27 +44,18 @@ class Files(Course):
         return {}
       return self.drive.files().get(fileId=file_id, fields='id,name,thumbnailLink,webViewLink').execute()
     
-    def get_submission_id(self, course_id: int, course_work_id: int) -> str:
-      """ Get work submission id"""
-      subs = self.service.courses().courseWork().studentSubmissions().list(
-        courseId=course_id,
-        courseWorkId=course_work_id
-        ).execute().get('studentSubmissions')[0]
-      print(f"submission id is {subs.get('id')}")
-      return subs.get('id')
+   
     
     def add_attachment(self, drive_file_id, course_id, course_work_id):
       """ Add a file/link attachment to an assignment submission """
-      drive_file = self.get_file(drive_file_id)
+    #   drive_file = self.get_file(drive_file_id)
       submission_id = self.get_submission_id(course_id, course_work_id)
+      print(f"Submission id: {submission_id}")
       request_body = {
         'addAttachments': [
           {
             'driveFile': {
-              'id': drive_file['id'],
-              'title': drive_file['name'],
-              'alternateLink': drive_file['webViewLink'],
-              'thumbnailUrl': drive_file.get('thumbnailLink')  # some may lack gen thumbnails
+              'id': drive_file_id
             }
           }
         ]
@@ -100,5 +91,7 @@ class Files(Course):
         id=submission_id
       ).execute()
       print(f"Res: {res}")
-      return res
       print(f"result of unsubmitting assignment: {res}")
+      return res
+    
+    

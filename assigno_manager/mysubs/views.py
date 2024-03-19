@@ -52,7 +52,7 @@ def submissions(_, unit_id):
 
 @api_view(['GET'])
 def submission(_, unit_id, work_id):
-    return Response(app.get_submission(unit_id, work_id))
+    return Response(app.get_submission_files(unit_id, work_id))
 
 @api_view(['GET'])
 def assignments(_):

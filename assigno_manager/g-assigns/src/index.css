@@ -101,3 +101,7 @@ button > a {
 #mark-done {
     margin-left: 7px;
 }
+
+.p-progress-spinner {
+    margin: 100px auto;
+}
