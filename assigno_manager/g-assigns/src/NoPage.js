@@ -5,8 +5,10 @@ function NoPage() {
     return (
         <div>
         <Navbar />
-          <h1>404 - Page Not Found</h1>
-          <p>The page you are looking for does not exist.</p>
+        <div className='app-content'>
+        <h1 className='disp-text'>404 - Page Not Found</h1>
+          <h2 className='disp-text' id="desc">The page you are looking for does not exist.</h2>
+        </div>
         </div>
       );
 }

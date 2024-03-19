@@ -93,7 +93,7 @@ function Grades() {
         {showGrades && (
           <div>
           <ArrowLeft className="arrow" color="crimson" size={65} onClick={exitUnitGrade} />
-            {grades.map((grade) => (
+            {grades.length > 0 ? (grades.map((grade) => (
               <Card title={grade.title} key={grade.id} className="grade-view">
                 <p>
                   Grade: {grade.grade ? grade.grade : `unassigned`}{" "}
@@ -101,7 +101,7 @@ function Grades() {
                   {grade.grade ? grade.maxPoints : ""}
                 </p>
               </Card>
-            ))}
+            ))) : (<h1 className='disp-text'>No work posted yet</h1>)}
           </div>
         )}
       </div>

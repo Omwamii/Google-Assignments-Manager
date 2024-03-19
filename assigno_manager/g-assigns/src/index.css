@@ -114,3 +114,12 @@ button > a {
 .arrow:hover {
     transform: scale(1.2);
 }
+
+.disp-text {
+    margin: 150px 0 50px 500px;
+}
+
+#desc {
+    margin-left: 450px;
+    margin-top: 75px;
+}

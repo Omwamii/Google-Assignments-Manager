@@ -36,14 +36,18 @@ function Notifs() {
 
     useEffect(() => {
         (async () => {
+          if (currentUnitId !== 0) {
+            // avoid fetching first time
             try{
-                const full_url = `${url}notifications/${currentUnitId}/`
-                const data = await axios.get(full_url);
-                setNotifs(data.data);
-                setIsLoading(false);
-            } catch (err) {
-                console.error(err);
-            }
+              const full_url = `${url}notifications/${currentUnitId}/`
+              const data = await axios.get(full_url);
+              setNotifs(data.data);
+              console.log(data.data);
+              setIsLoading(false);
+          } catch (err) {
+              console.error(err);
+          }
+          }
         })();
     }, [currentUnitId]);
 
@@ -87,13 +91,13 @@ function Notifs() {
           {showNotifs && (
             <div>
             <ArrowLeft color="crimson" size={65} onClick={exitView}  className='arrow'/>
-            {notifs.map((notif) => (
+            {notifs.length > 0 ? (notifs.map((notif) => (
               <div className="card" id="notifs">
                 <Fieldset legend={notif.time} key={notif.id}>
                   <p className="mt-5">{notif.text}</p>
                 </Fieldset>
               </div>
-            ))}
+            ))) : (<h1 className='disp-text'>No notifications yet</h1>)}
             </div>
           )}
         </div>

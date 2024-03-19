@@ -12,10 +12,10 @@ class Files(Course):
       """ Check if student had turned in work
           Return true if work was turned in else false
       """
-      sub = self.service.courses().courseWork().studentSubmissions().list(
+      sub = (self.service.courses().courseWork().studentSubmissions().list(
         courseId=course_id,
         courseWorkId=course_work_id
-        ).execute().get('studentSubmissions')[0]
+        ).execute()).get('studentSubmissions')[0]
       # https://developers.google.com/classroom/reference/rest/v1/SubmissionState 
       # ^ docs on diff submission states
       if sub.get('state') == 'TURNED_IN':
@@ -67,6 +67,7 @@ class Files(Course):
         body=request_body
       ).execute()
       print(f" result of adding attachment: {sub}")
+      return sub
 
     def turn_in_assignment(self, course_id, course_work_id):
       """ Turn in an assignment 
@@ -79,6 +80,7 @@ class Files(Course):
         id=submission_id
       ).execute()
       print(f"result of turning in assignment: {res}")
+      return res
     
     def unsubmit_assignment(self, course_id, course_work_id):
       """ Unsubmit an assignment 
@@ -90,8 +92,5 @@ class Files(Course):
         courseWorkId=course_work_id,
         id=submission_id
       ).execute()
-      print(f"Res: {res}")
       print(f"result of unsubmitting assignment: {res}")
       return res
-    
-    

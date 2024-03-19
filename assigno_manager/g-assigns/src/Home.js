@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { FileUpload } from 'primereact/fileupload';
 import Navbar from './Navbar';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { ArrowLeft } from 'react-bootstrap-icons';
+import { Toast } from 'primereact/toast';
 
 
 const url = 'http://localhost:8000/';
@@ -14,24 +15,28 @@ function Home() {
 
   const [isLoading, setIsLoading] = useState(true);
   const [pendingWork, setPendingWork] = useState([]);
-  const [showPendingWork, setShowPendingWork] = useState(true);
+  const [showPendingWork, setShowPendingWork] = useState(false);
   const [currentWorkId, setCurrentWorkId] = useState(0);
   const [showCurrentWork, setShowCurrentWork] = useState(false);
   const [currentWork, setCurrentWork] = useState([]);
   const [currentUnitId, setCurrentUnitId] = useState(0);
+  const toastTopCenter = useRef(null);
   
+
   useEffect(() => {
-    (async () => {
+    const fetchData = async () => {
       try {
         const fullUrl = `${url}assignments/`;
-        const data = await axios.get(fullUrl);
-        setPendingWork(data.data);
-        setIsLoading(false)
-      } catch (err) {
-        console.error(err);
+        const response = await axios.get(fullUrl);
+        setPendingWork(response.data);
+        setIsLoading(false);
+        setShowPendingWork(true);
+      } catch (error) {
+        console.error(error);
       }
-    })();
-  }, []);
+    };
+    fetchData();
+  }, [url]);
 
   // fetch assignment details
   useEffect(() => {
@@ -77,6 +82,7 @@ function Home() {
     return (
       <div>
         <Navbar />
+        <Toast ref={toastTopCenter} position="top-center" />
         <div className="app-content">
           <ProgressSpinner />
         </div>
@@ -86,96 +92,98 @@ function Home() {
   return (
     <div>
       <Navbar />
-      {showPendingWork &&
-        (pendingWork ? (
-          <div className="pending app-content">
-            {pendingWork.map((pending) => (
-              <div className="card assignment" key={pending.id}>
-                <div className="card-body">
-                  <h5 className="card-title">{pending.unit}</h5>
-                  <p className="card-text">
-                    {pending.title}{" "}
-                    {pending.points && `(${pending.points} pts)`}
-                  </p>
-                  <div className="pending-work-btns">
+      {showPendingWork && (
+        <div className="pending app-content">
+          {pendingWork.length > 0 ? pendingWork.map((pending) => (
+            <div className="card assignment" key={pending.id}>
+              <div className="card-body">
+                <h5 className="card-title">{pending.unit}</h5>
+                <p className="card-text">
+                  {pending.title} {pending.points && `(${pending.points} pts)`}
+                </p>
+                <div className="pending-work-btns">
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => viewWork(pending.id, pending.courseId)}
+                  >
+                    View work
+                  </button>
+                  <button type="button" className="btn btn-primary" id="view">
+                    <a
+                      href={pending.classLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View in classroom
+                    </a>
+                  </button>
+                  {pending.dueTime === " No due time" ? (
                     <button
                       type="button"
-                      className="btn btn-primary"
-                      onClick={() => viewWork(pending.id, pending.courseId)}
+                      className="btn btn-secondary"
+                      id="mark-done"
+                      onClick={() => markAsDone(pending.id, pending.courseId)}
                     >
-                      View work
+                      Mark as done
                     </button>
-                    <button type="button" className="btn btn-primary" id="view">
-                      <a
-                        href={pending.classLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        View in classroom
-                      </a>
-                    </button>
-                    {pending.dueTime === " No due time" ? (
-                      <button
-                        type="button"
-                        className="btn btn-secondary"
-                        id="mark-done"
-                        onClick={() => markAsDone(pending.id, pending.courseId)}
-                      >
-                        Mark as done
-                      </button>
-                    ) : (
-                      ""
-                    )}
-                  </div>
-                </div>
-                <div className="card-footer">
-                  <small className="text-muted">
-                    Due in: {pending.dueTime}
-                  </small>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
-            ))}
+              <div className="card-footer">
+                <small className="text-muted">Due in: {pending.dueTime}</small>
+              </div>
+            </div>
+          )) : (<h1 className='disp-text'>{`No pending work  :)`}</h1>)}
+        </div>
+      )}
+      {showCurrentWork &&
+        (currentWork ? (
+          <div className="assignment-view app-content">
+            <ArrowLeft
+              color="crimson"
+              size={65}
+              onClick={exitView}
+              className="arrow"
+            />
+            <div className="card assignment">
+              <div className="card-header">{currentWork.title}</div>
+              <div className="card-body">
+                <p className="card-text">{currentWork.description}</p>
+              </div>
+              <div className="card-footer">
+                <small className="text-muted">Due in: {currentWork.time}</small>
+              </div>
+            </div>
+            <div className="card" id="files">
+              <div className="card-header">Files</div>
+              <div className="card-body">
+                {/* Add functionality to upload link as assignment & also add links to file resources*/}
+                <FileUpload
+                  name="file"
+                  url={`${url}submit-assignment/${currentUnitId}/${currentWorkId}/`}
+                  multiple
+                  accept="*/*"
+                  maxFileSize={1000000}
+                  emptyTemplate={
+                    <p className="m-0">
+                      Drag and drop files to here to upload.
+                    </p>
+                  }
+                />
+              </div>
+              <div className="card-footer">
+                <small className="text-muted">
+                  Add or remove files for submission
+                </small>
+              </div>
+            </div>
           </div>
         ) : (
           <ProgressSpinner />
         ))}
-      {showCurrentWork && (currentWork ? (
-        <div className="assignment-view app-content">
-        <ArrowLeft color="crimson" size={65} onClick={exitView} className='arrow'/>
-          <div className="card assignment">
-            <div className="card-header">{currentWork.title}</div>
-            <div className="card-body">       
-              <p className="card-text">{currentWork.description}</p>
-            </div>
-            <div className="card-footer">
-              <small className="text-muted">Due in: {currentWork.time}</small>
-            </div>
-          </div>
-          <div className="card" id="files">
-            <div className="card-header">Files</div>
-            <div className="card-body">
-              {/* Add functionality to upload link as assignment & also add links to file resources*/}
-              <FileUpload
-                name="file"
-                url={`${url}submit-assignment/${currentUnitId}/${currentWorkId}/`}
-                multiple
-                accept="*/*"
-                maxFileSize={1000000}
-                emptyTemplate={
-                  <p className="m-0">Drag and drop files to here to upload.</p>
-                }
-              />
-            </div>
-            <div className="card-footer">
-              <small className="text-muted">
-                Add or remove files for submission
-              </small>
-            </div>
-          </div>
-        </div>
-      ) : (<ProgressSpinner />)
-        
-      )}
     </div>
   );
 }

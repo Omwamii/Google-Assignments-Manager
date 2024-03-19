@@ -18,6 +18,8 @@ export default function Stats() {
         const data = await axios.get(full_url);
         console.log(data.data);
         setLabels(Object.keys(data.data));
+        console.log(`Keys: ${Object.keys(data.data)}`)
+        console.log(`Vals: ${Object.keys(data.data)}`)
         setData(Object.values(data.data));
         setIsLoading(false);
       } catch (err) {

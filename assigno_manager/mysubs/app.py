@@ -5,7 +5,7 @@ from .files import Files
 class App(Files):
     """ App class """
     def __str__(self):
-        """ Return student's name & id?"""
+        """ Return student's name & id as repr?"""
         pass
 
 

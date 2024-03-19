@@ -41,14 +41,12 @@ def coursework(_, unit_id):
     """
     return Response(app.get_coursework(unit_id))
 
-
 @api_view(['GET'])
 def submissions(_, unit_id):
     """ Returns student's submission for a unit's coursework
         Required: Unit ID
     """
     return Response(app.get_unit_submissions(unit_id))
-
 
 @api_view(['GET'])
 def submission(_, unit_id, work_id):
@@ -59,13 +57,10 @@ def assignments(_):
     """ Return pending assignments """
     return Response(app.get_pending_work())
 
-
 @api_view(['GET'])
 def assignment(_, unit_id, work_id):
     """ Get an assignment"""
     return Response(app.get_assignment(unit_id, work_id))
-    # return Response(app.get_submission_id(unit_id, work_id))
-
 
 @api_view(['GET'])
 def units(_):
@@ -80,7 +75,6 @@ def submit_assignment(request, course_id, work_id):
         Get ids from request frontend & use ids to submit collection of files 
     """
     file_s = request.FILES.getlist('file')
-    # print(f"File(s) {file_s}")
     if app.work_was_turned_in(course_id, work_id):
         app.unsubmit_assignment(course_id, work_id)
     for file in file_s:
@@ -97,21 +91,9 @@ def unsubmit_assignment(_, course_id, work_id):
     return Response(app.unsubmit_assignment(course_id, work_id))
 
 @api_view(['GET'])
-def add_to_calendar(_, unit_id, work_id):
-    """ Add assignment due date to calendar """
-    return Response(app.work_was_turned_in(unit_id, work_id))
-
-
-@api_view(['GET'])
 def get_notifications(_, unit_id):
     """ Get actions needed (notifs) """
     return Response(app.get_notifications(unit_id))
-
-@api_view(['GET'])
-def undo_submit(_):
-    """ reclaim work submission """
-    # use courswork reclaim() fn
-
 
 @api_view(['GET'])
 def grades(_, unit_id):
@@ -122,16 +104,19 @@ def grades(_, unit_id):
 @api_view(['GET'])
 def stats(_):
     """ Get average grades per unit for chart display"""
-    return Response(app.get_unit_avg())
+    stats = app.get_unit_avg()
+    stats_dict = dict()
+    for stat in stats:
+        for key, val in stat.items():
+            stats_dict[key] = val
+    return Response(stats_dict)
 
 @api_view(['POST'])
-def markdone(request):
+def markdone(_, unit_id, work_id):
     """ Mark an assignment as done
         Work without due time has to be marked as done to take them off the list of due work
     """
-    work_id = request.POST.get('id')
-    course_id = request.POST.get('course_id')
-    work_marked_obj = MarksAsDone.objects.create(work_id=work_id, course_id=course_id)
+    work_marked_obj = MarksAsDone.objects.create(work_id=work_id, course_id=unit_id)
     if work_marked_obj:
         return Response({'message': 'Work marked as done successfully', 'error': False})
     return Response({'message': 'Error marking work as done', 'error': True})
