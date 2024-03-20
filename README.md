@@ -35,13 +35,21 @@ I also used Google Drive API to upload files to Google drive then submitting the
 
 ## File structure
 *models.py* - contains one model 'MarkAsDone' which keeps track of assignments which are marked as Done
+
 *views.py* - contains the api views that handle api requests to the backend
+
 *urls.py* - contains url configurations
+
 *base.py* - contains the Base Class for app resources initializations and authentication
+
 *course.py* - contains the Course class, inheriting from base that handles course information resources
+
 *file.py* - contains the Files class, which handles file operations like submission, unsubmission
+
 *app.py* - contains the final App class, inheriting from Files
+
 *admin.py* - contains registered models on the admin site
+
 *regex.py* - contains a function which uses regex to extraxt course code name from a complete course description
 
 ## How to run
