@@ -188,6 +188,8 @@ class Course(Base):
                  if files:
                     if len(files) == 0:
                        pending.append(pending_work)
+                 else:
+                    pending.append(pending_work)  # test
           else:
             # Before appending work as due, check if it had been marked as done
              if MarksAsDone.objects.filter(work_id=work['id'], course_id=course['id']).exists():

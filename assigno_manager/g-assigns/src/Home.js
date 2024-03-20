@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { FileUpload } from 'primereact/fileupload';
-import Navbar from './Navbar';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { ArrowLeft } from 'react-bootstrap-icons';
 import { Toast } from 'primereact/toast';
+import Navbar from './Navbar';
+import PendingAssignmentsCache from './PendingCache';
 
 
 const url = 'http://localhost:8000/';
@@ -22,12 +23,14 @@ function Home() {
   const [currentUnitId, setCurrentUnitId] = useState(0);
   const toastTopCenter = useRef(null);
   
+  const Cache = new PendingAssignmentsCache();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const fullUrl = `${url}assignments/`;
         const response = await axios.get(fullUrl);
+        Cache.saveData(response.data) // save response data to cache
         setPendingWork(response.data);
         setIsLoading(false);
         setShowPendingWork(true);
@@ -35,8 +38,16 @@ function Home() {
         console.error(error);
       }
     };
-    fetchData();
-  }, [url]);
+    if (Cache.hasExpired()) {
+      Cache.deleteData()
+      fetchData();
+    } else {
+      console.log('cache not expired');
+      setPendingWork(Cache.getData())
+      setIsLoading(false);
+      setShowPendingWork(true);
+    }
+  }, []);
 
   // fetch assignment details
   useEffect(() => {
@@ -82,7 +93,6 @@ function Home() {
     return (
       <div>
         <Navbar />
-        <Toast ref={toastTopCenter} position="top-center" />
         <div className="app-content">
           <ProgressSpinner />
         </div>

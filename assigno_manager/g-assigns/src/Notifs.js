@@ -8,6 +8,8 @@ import Navbar from './Navbar';
 import { ArrowLeft } from 'react-bootstrap-icons';
 import { ProgressSpinner } from 'primereact/progressspinner';
 
+import UnitsCache from './UnitsCache';
+
 const url = 'http://localhost:8000/';
 
 function Notifs() {
@@ -21,17 +23,29 @@ function Notifs() {
     const [units, setUnits] = useState([]);
     const [currentUnitId, setCurrentUnitId] = useState(0);
     
+    const Cache = new UnitsCache();
+
     useEffect(() => {
-      (async () => {
-          try{
-              const full_url = `${url}units/`
-              const data = await axios.get(full_url);
-              setUnits(data.data);
-              setIsLoading(false);
-          } catch (err) {
-              console.error(err);
-          }
-      })();
+      const fetchData = async () => {
+        try {
+          const fullUrl = `${url}units/`;
+          const response = await axios.get(fullUrl);
+          Cache.saveData(response.data) // save response data to cache
+          setUnits(response.data);
+          setIsLoading(false);
+          setShowUnits(true);
+        } catch (error) {
+          console.error(error);
+        }
+      };
+      if (Cache.hasExpired()) {
+        Cache.deleteData()
+        fetchData();
+      } else {
+        setUnits(Cache.getData())
+        setIsLoading(false);
+        setShowUnits(true);
+      }
   }, []);
 
     useEffect(() => {
