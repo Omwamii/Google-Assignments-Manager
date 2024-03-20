@@ -56,7 +56,6 @@ function Notifs() {
               const full_url = `${url}notifications/${currentUnitId}/`
               const data = await axios.get(full_url);
               setNotifs(data.data);
-              console.log(data.data);
               setIsLoading(false);
           } catch (err) {
               console.error(err);
@@ -106,7 +105,7 @@ function Notifs() {
             <div>
             <ArrowLeft color="crimson" size={65} onClick={exitView}  className='arrow'/>
             {notifs.length > 0 ? (notifs.map((notif) => (
-              <div className="card" id="notifs">
+              <div className="card" id="notifs" key={notif.id}>
                 <Fieldset legend={notif.time} key={notif.id}>
                   <p className="mt-5">{notif.text}</p>
                 </Fieldset>

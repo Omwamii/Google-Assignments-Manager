@@ -51,11 +51,16 @@ class Course(Base):
         now = datetime.utcnow()
         then = datetime.strptime(notif['updateTime'], format)
         time_passed = now - then
-        minutes_passed = int(time_passed.total_seconds() // 60)
         if time_passed.days:
           time_str = str(time_passed.days) + ' days ago'
         else:
-          time_str = f'{minutes_passed} minutes ago'
+          minutes_remaining = ((time_passed.total_seconds() / 86400) - time_passed.days) * (24 * 60)
+          if minutes_remaining > 60:
+             hrs = int(minutes_remaining / 60)
+             mins = int(minutes_remaining % 60)
+             time_str = f'{hrs} hrs, {mins} mins ago'
+          else:
+             time_str = f'{minutes_remaining} mins ago'
         notif_obj = {'id': notif['id'], 'courseId': notif['courseId'], 'text': notif['text'],
                      'time': time_str}
         notifications.append(notif_obj)

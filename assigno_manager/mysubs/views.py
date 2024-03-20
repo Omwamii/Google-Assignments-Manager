@@ -112,7 +112,7 @@ def stats(_):
     return Response(stats_dict)
 
 @api_view(['POST'])
-def markdone(_, unit_id, work_id):
+def mark_as_done(_, unit_id, work_id):
     """ Mark an assignment as done
         Work without due time has to be marked as done to take them off the list of due work
     """

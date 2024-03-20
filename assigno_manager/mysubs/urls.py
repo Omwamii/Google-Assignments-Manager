@@ -15,5 +15,6 @@ urlpatterns = [
         path('submit-assignment/<int:course_id>/<int:work_id>/', views.submit_assignment),
         path('unsubmit-assignment/<int:course_id>/<int:work_id>/', views.unsubmit_assignment),
         path('grades/<int:unit_id>/', views.grades),
+        path('mark-done/<int:unit_id>/<int:work_id>/', views.mark_as_done),
         path('stats/', views.stats)
         ]

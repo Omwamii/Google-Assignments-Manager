@@ -21,7 +21,7 @@ function Home() {
   const [showCurrentWork, setShowCurrentWork] = useState(false);
   const [currentWork, setCurrentWork] = useState([]);
   const [currentUnitId, setCurrentUnitId] = useState(0);
-  const toastTopCenter = useRef(null);
+  const toast = useRef(null);
   
   const Cache = new PendingAssignmentsCache();
 
@@ -42,7 +42,7 @@ function Home() {
       Cache.deleteData()
       fetchData();
     } else {
-      console.log('cache not expired');
+      // cache not expired
       setPendingWork(Cache.getData())
       setIsLoading(false);
       setShowPendingWork(true);
@@ -85,8 +85,25 @@ function Home() {
     setCurrentWork([]);
   }
 
-  const markAsDone = () => {
-    console.log('work marked as done');
+  const markAsDone = async (work_id, unit_id) => {
+    try {
+      const full_url = `${url}mark-done/${unit_id}/${work_id}/`;
+      const data = await axios.post(full_url);
+      if (data.data.error) {
+        toast.current.show({ severity: 'error', summary: 'Error', detail: data.data.message });
+      } else {
+        toast.current.show({ severity: 'success', summary: 'Info', detail: data.data.message });
+        toast.current.show({ severity: 'info', summary: 'Info', detail: 'It might take a while for the work to be removed due to caching' });
+      }
+    } catch (err) {
+      console.error(err);
+      toast.current.show({ severity: 'error', summary: 'Error', detail: 'Error! could not mark work as done' });
+    }
+  }
+
+  const handleUploaded = () => {
+    // toast.current.show({ severity: 'info', summary: 'Info', detail: 'Message Content' });
+    console.log('Has been uploaded');
   }
 
   if (isLoading) {
@@ -102,6 +119,7 @@ function Home() {
   return (
     <div>
       <Navbar />
+      <Toast ref={toast} position='top-center'/>
       {showPendingWork && (
         <div className="pending app-content">
           {pendingWork.length > 0 ? pendingWork.map((pending) => (
@@ -128,7 +146,7 @@ function Home() {
                       View in classroom
                     </a>
                   </button>
-                  {pending.dueTime === " No due time" ? (
+                  {pending.dueTime === " No due time" || pending.dueTime.split(" ")[1] === "passed" ? (
                     <button
                       type="button"
                       className="btn btn-secondary"
@@ -149,8 +167,7 @@ function Home() {
           )) : (<h1 className='disp-text'>{`No pending work  :)`}</h1>)}
         </div>
       )}
-      {showCurrentWork &&
-        (currentWork ? (
+      {showCurrentWork && (
           <div className="assignment-view app-content">
             <ArrowLeft
               color="crimson"
@@ -170,12 +187,12 @@ function Home() {
             <div className="card" id="files">
               <div className="card-header">Files</div>
               <div className="card-body">
-                {/* Add functionality to upload link as assignment & also add links to file resources*/}
                 <FileUpload
                   name="file"
                   url={`${url}submit-assignment/${currentUnitId}/${currentWorkId}/`}
                   multiple
                   accept="*/*"
+                  onUpload={handleUploaded}
                   maxFileSize={1000000}
                   emptyTemplate={
                     <p className="m-0">
@@ -191,9 +208,7 @@ function Home() {
               </div>
             </div>
           </div>
-        ) : (
-          <ProgressSpinner />
-        ))}
+        )}
     </div>
   );
 }
