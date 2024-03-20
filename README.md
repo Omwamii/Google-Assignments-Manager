@@ -9,7 +9,6 @@
 + Unsubmit assignments (with proper permissions)
 
 ## How to run
-After cloning, make sure gunicorn is installed. If not, install with
-    - pip install gunicorn
-Start backend server from root of project with - gunicorn assigno_manager.wsgi:application --timeout 60
-In another tab, move to frontend folder and start frontend server - cd g-assigns ; npm start
+After cloning, make sure gunicorn is installed. If not, install with `pip install gunicorn`
+Start backend server from root of project with `gunicorn assigno_manager.wsgi:application --timeout 60`
+In another tab, move to frontend folder and start frontend server `cd g-assigns ; npm start`
