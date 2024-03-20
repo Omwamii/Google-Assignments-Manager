@@ -9,9 +9,9 @@
 + Unsubmit assignments (with proper permissions)
 
 ## How to run
-- After cloning, make sure gunicorn is installed. If not, install with
+- After cloning, make sure all packages necessary are installed by typing
 ```python
-pip install gunicorn
+pip install -r requirements.txt
 ```
 - Start backend server from root of project with: 
 ```python
