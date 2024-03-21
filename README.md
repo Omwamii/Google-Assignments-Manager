@@ -131,6 +131,7 @@ I also used Google Drive API to upload files to Google drive then submitting the
 ```python
 pip install -r requirements.txt
 ```
+- To be added to **test users**, send an email to alphaian020@gmail.com. Since this is a google cloud console project, only allowed users can access the API functionalities.
 - Start backend server from root of project with: 
 ```python
 gunicorn assigno_manager.wsgi:application --timeout 60
