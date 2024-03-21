@@ -47,60 +47,64 @@ I also used Google Drive API to upload files to Google drive then submitting the
     |__ token.json
     |__ README.md
 
-assigno_manager/
-├── asgi.py
-├── __init__.py
-├── __pycache__
-│   ├── __init__.cpython-311.pyc
-│   ├── settings.cpython-311.pyc
-│   ├── urls.cpython-311.pyc
-│   └── wsgi.cpython-311.pyc
-├── settings.py
-├── urls.py
-└── wsgi.py
 
-mysubs
-├── admin.py
-├── app.py
-├── apps.py
-├── base.py
-├── course.py
-├── data
-│   └── stats.json
-├── files.py
-├── __init__.py
-├── migrations
-│   ├── 0001_initial.py
-│   └── __init__.py
-├── models.py
-├── regex.py
-├── tests.py
-├── urls.py
-└── views.py
+    assigno_manager/
+    ├── asgi.py
+    ├── __init__.py
+    ├── __pycache__
+    │   ├── __init__.cpython-311.pyc
+    │   ├── settings.cpython-311.pyc
+    │   ├── urls.cpython-311.pyc
+    │   └── wsgi.cpython-311.pyc
+    ├── settings.py
+    ├── urls.py
+    └── wsgi.py
 
-g-assigns/public
-├── favicon.ico
-├── index.html
-├── logo192.png
-├── logo512.png
-├── manifest.json
-└── robots.txt
 
-g-assigns/src
-├── App.js
-├── App.test.js
-├── Grades.js
-├── Home.js
-├── index.css
-├── index.js
-├── Navbar.js
-├── NoPage.js
-├── Notifs.js
-├── PendingCache.js
-├── reportWebVitals.js
-├── setupTests.js
-├── Stats.js
-└── UnitsCache.js
+    mysubs
+    ├── admin.py
+    ├── app.py
+    ├── apps.py
+    ├── base.py
+    ├── course.py
+    ├── data
+    │   └── stats.json
+    ├── files.py
+    ├── __init__.py
+    ├── migrations
+    │   ├── 0001_initial.py
+    │   └── __init__.py
+    ├── models.py
+    ├── regex.py
+    ├── tests.py
+    ├── urls.py
+    └── views.py
+
+
+    g-assigns/public
+    ├── favicon.ico
+    ├── index.html
+    ├── logo192.png
+    ├── logo512.png
+    ├── manifest.json
+    └── robots.txt
+
+    g-assigns/src
+    ├── App.js
+    ├── App.test.js
+    ├── Grades.js
+    ├── Home.js
+    ├── index.css
+    ├── index.js
+    ├── Navbar.js
+    ├── NoPage.js
+    ├── Notifs.js
+    ├── PendingCache.js
+    ├── reportWebVitals.js
+    ├── setupTests.js
+    ├── Stats.js
+    └── UnitsCache.js
+
 
 *models.py* - contains one model 'MarkAsDone' which keeps track of assignments which are marked as Done
 
