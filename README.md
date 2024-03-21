@@ -105,10 +105,17 @@ pip install -r requirements.txt
 ```
 - To be added to **test users**, send an email to alphaian020@gmail.com. Since this is a google cloud console project, only allowed users can access the API functionalities.
 
-- Start backend server from root of project with: 
+Because of many unassigned grades, your progress report chart reports could be minimal (or none)
+- To view test data and see how it looks like on the chart, start the backend server with:
 ```python
 gunicorn assigno_manager.wsgi:application --timeout 60
 ```
+
+- To view your real data (your real unit average grades) on the chart, start the backend server with
+```python
+USE_CHART_DATA=REAL gunicorn assigno_manager.wsgi:application --timeout 60
+```
+
 - In another tab, from the root folder, move to frontend folder and install the packages with
 ```
 cd g-assigns ; npm install
