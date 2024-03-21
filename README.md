@@ -28,7 +28,7 @@ Students, with the proper permissions, are able to submit (turn in) their work u
 
 I decided to create a simple interface for students to quickly see and do what they need efficiently
 
-## How I did
+## How I did it
 I utilized the Google classroom API to get resources such as courses, coursework, student submissions, notifications and captured required information from these resources then sent to the React frontend using Django function-based api views
 
 I also used Google Drive API to upload files to Google drive then submitting the files to google classroom since the submission object for files require a file id to be a google drive id
