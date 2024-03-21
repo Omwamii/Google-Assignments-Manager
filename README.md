@@ -35,16 +35,17 @@ I also used Google Drive API to upload files to Google drive then submitting the
 
 ## File structure
 ### Important files organization
-./
-|__ assigno_manager/
-|__ credentials.json
-|__ db.sqlite3
-|__ g-assigns/
-|__ manage.py
-|__ mysubs/
-|__ requirements.txt
-|__ token.json
-|__ README.md
+
+    ./
+    |__ assigno_manager/
+    |__ credentials.json
+    |__ db.sqlite3
+    |__ g-assigns/
+    |__ manage.py
+    |__ mysubs/
+    |__ requirements.txt
+    |__ token.json
+    |__ README.md
 
 assigno_manager/
 ├── asgi.py
