@@ -8,12 +8,23 @@
 + Submit assignments (with proper permissions)
 + Unsubmit assignments (with proper permissions)
 
+## What I did and why?
+Seeing how the google classroom platform is filled with a lot of features, sometimes all a student needs is to see all the pending work, do the work and go ahead and submit it. With the usual classroom, you'd have to first search for the unit, or for those who know, view the assignments tab, but it all seems like a lot of work just to see pending work, let alone missing work
+
+After work is assigned grades, students may not even notice the grades assignment and to which work it was assigned unless they are keen. Through this web application, a student can see grades per unit in an ordely and easy manner without all the overload of assignment instructions and files you submitted, just see what grade you got in which assignment.
+
+Students may also want to see how they are fairing per unit, comparing averages to other units, in one simple click. This is not a feature inculded in google classroom. In my application, users can see their grade averages in a chart with one simple click.
+
+Students also get to see all notifications for units they enrolled in allowing them to quickly make reference for an announcement made with accurate timing
+
+Students, with the proper permissions, are able to submit (turn in) their work using the Google classroom API and also reclaim their work for addition of files.
+
+I decided to create a simple interface for students to quickly see and do what they need efficiently
+
 ## How I did it
 I utilized the Google classroom API to get resources such as courses, coursework, student submissions, notifications and captured required information from these resources then sent to the React frontend using Django function-based api views
 
 I also used Google Drive API to upload files to Google drive then submitting the files to google classroom since the submission object for files require a file id to be a google drive id
-
-Authentication was handled by Google Oauth through the Oauth consent screen
 
 ## File structure
 ### Important files organization
@@ -26,6 +37,7 @@ Authentication was handled by Google Oauth through the Oauth consent screen
     |__ manage.py
     |__ mysubs/
     |__ requirements.txt
+    |__ token.json
     |__ README.md
 
 
@@ -60,6 +72,15 @@ Authentication was handled by Google Oauth through the Oauth consent screen
     ├── tests.py
     ├── urls.py
     └── views.py
+
+
+    g-assigns/public
+    ├── favicon.ico
+    ├── index.html
+    ├── logo192.png
+    ├── logo512.png
+    ├── manifest.json
+    └── robots.txt
 
     g-assigns/src
     ├── App.js
