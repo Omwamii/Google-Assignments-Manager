@@ -99,6 +99,7 @@ Authentication was handled by Google Oauth through the Oauth consent screen
 *g-assigns/src/* * - contains React component files
 
 ## How to run
+### Linux
 - After cloning, make sure all packages necessary are installed by typing
 ```python
 pip install -r requirements.txt
@@ -124,3 +125,6 @@ cd g-assigns ; npm install
 ```python
 npm start
 ```
+
+### MacOs / Windows
+In progress
