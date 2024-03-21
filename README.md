@@ -78,23 +78,23 @@ Authentication was handled by Google Oauth through the Oauth consent screen
     └── UnitsCache.js
 
 
-*models.py* - contains one model 'MarkAsDone' which keeps track of assignments which are marked as Done
+*models.py* - module with one model 'MarkAsDone' which keeps track of assignments which are marked as Done
 
-*views.py* - contains the api views that handle api requests to the backend
+*views.py* - module with the api views that handle api requests to the backend
 
-*urls.py* - contains url configurations
+*urls.py* - module with api url configurations
 
-*base.py* - contains the Base Class for app resources initializations and authentication
+*base.py* - module with the Base Class for app resources initializations and authentication
 
-*course.py* - contains the Course class, inheriting from base that handles course information resources
+*course.py* - module with the Course class, inheriting from base that handles course information resources
 
-*file.py* - contains the Files class, which handles file operations like submission, unsubmission
+*file.py* - module with the Files class, which handles file operations like submission, unsubmission
 
-*app.py* - contains the final App class, inheriting from Files
+*app.py* - module with the final App class, inheriting from Files
 
-*admin.py* - contains registered models on the admin site
+*admin.py* - module with registered models on the admin site
 
-*regex.py* - contains a function which uses regex to extraxt course code name from a complete course description
+*regex.py* - module with a function which uses regex to extract course code name from a complete course description
 
 *g-assigns/src/* * - contains React component files
 
