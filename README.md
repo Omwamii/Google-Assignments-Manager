@@ -137,7 +137,11 @@ pip install -r requirements.txt
 ```python
 gunicorn assigno_manager.wsgi:application --timeout 60
 ```
-- In another tab, from the root folder, move to frontend folder and start frontend server
+- In another tab, from the root folder, move to frontend folder and install the packages with
+```
+cd g-assigns ; npm install
+```
+- Start the frontend server
 ```python
-cd g-assigns ; npm start
+npm start
 ```
