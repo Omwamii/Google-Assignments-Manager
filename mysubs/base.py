@@ -13,7 +13,6 @@ class Base():
     creds = None
     flow = None
     data = None
-    # _id = 114502058831176393158
 
     # add memoization
     # If modifying these scopes, delete the file token.json.
