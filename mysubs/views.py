@@ -4,34 +4,6 @@ from rest_framework.response import Response
 from .app import App
 from .models import MarksAsDone
 
-"""
-Test units
-{
-        "id": "640286398164",
-        "name": "Group1_CSC_319_October2023_Feb2024"
-    },
-    {
-        "id": "634082930362",
-        "name": "CSC315 Distributed Systems, 2023-2024"
-    },
-    {
-        "id": "632230740983",
-        "name": "CSC311G1-G2-YR2023-2024 ANALYSIS AND DESIGN OF ALGORTHMS"
-    },
-    {
-        "id": "632004324252",
-        "name": "Computer Graphics CSC314"
-    },
-    {
-        "id": "631842527791",
-        "name": "CSC 316 Introduction to organizations and management"
-    },
-    {
-        "id": "346224049561",
-        "name": "CSC 318 - 2023/2024"
-    }
-"""
-
 app = App()  # App instance with auth & classroom resources
 
 @api_view(['GET'])

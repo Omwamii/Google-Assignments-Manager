@@ -94,6 +94,10 @@ function Home() {
       } else {
         toast.current.show({ severity: 'success', summary: 'Info', detail: data.data.message });
         toast.current.show({ severity: 'info', summary: 'Info', detail: 'It might take a while for the work to be removed due to caching' });
+        Cache.expireNow(); // expire cache to reload page
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
       }
     } catch (err) {
       console.error(err);
@@ -146,7 +150,7 @@ function Home() {
                       View in classroom
                     </a>
                   </button>
-                  {pending.dueTime === " No due time" || pending.dueTime.split(" ")[1] === "passed" ? (
+                  {pending.dueTime === " No due time" || pending.dueTime.split(" ")[2] === "passed" ? (
                     <button
                       type="button"
                       className="btn btn-secondary"
@@ -156,7 +160,7 @@ function Home() {
                       Mark as done
                     </button>
                   ) : (
-                    ""
+                  ""
                   )}
                 </div>
               </div>

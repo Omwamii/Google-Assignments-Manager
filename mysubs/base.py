@@ -1,5 +1,4 @@
 import os.path
-
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -7,15 +6,11 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 
-
 class Base():
     """ Oauth implementation for logins & API resources initialization"""
-    creds = None
-    flow = None
-    data = None
+    creds, flow, data = (None, None, None)
 
-    # add memoization
-    # If modifying these scopes, delete the file token.json.
+    # If modifying these scopes, delete the file token.json and restart authoration
     _SCOPES = [
       "https://www.googleapis.com/auth/classroom.courses.readonly",
       "https://www.googleapis.com/auth/classroom.announcements",
@@ -46,7 +41,7 @@ class Base():
         else:
             # credentials file was downloaded to root from google cloud console credentials
             self.flow = InstalledAppFlow.from_client_secrets_file("credentials.json", self._SCOPES)
-            self.creds = self.flow.run_local_server(port=8080)
+            self.creds = self.flow.run_local_server(port=8080, access_type='offline', prompt='consent')
         
         with open("token.json", "w") as token:
           token.write(self.creds.to_json())

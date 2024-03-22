@@ -1,8 +1,6 @@
 // cache units to prevent unnecessary calls to backend
 
 class UnitsCache {
-    constructor() {}
-
     hasExpired() {
         // check if an object has reached its expiry time in cache
         const expiryTimeString = JSON.parse(localStorage.getItem('units_expiry'))

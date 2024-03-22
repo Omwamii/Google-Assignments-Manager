@@ -2,8 +2,6 @@
 from .course import Course
 from os import remove as delete_file
 from googleapiclient.http import MediaFileUpload
-from google.protobuf.json_format import MessageToJson
-import json
 
 
 class Files(Course):
@@ -12,10 +10,7 @@ class Files(Course):
       """ Check if student had turned in work
           Return true if work was turned in else false
       """
-      sub = (self.service.courses().courseWork().studentSubmissions().list(
-        courseId=course_id,
-        courseWorkId=course_work_id
-        ).execute()).get('studentSubmissions')[0]
+      sub = self.get_submission(course_id, course_work_id)
       # https://developers.google.com/classroom/reference/rest/v1/SubmissionState 
       # ^ docs on diff submission states
       if sub.get('state') == 'TURNED_IN':
@@ -48,7 +43,6 @@ class Files(Course):
     
     def add_attachment(self, drive_file_id, course_id, course_work_id):
       """ Add a file/link attachment to an assignment submission """
-    #   drive_file = self.get_file(drive_file_id)
       submission_id = self.get_submission_id(course_id, course_work_id)
       print(f"Submission id: {submission_id}")
       request_body = {

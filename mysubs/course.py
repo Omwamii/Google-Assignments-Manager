@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """ Module with app functionalities for course data manipulation
 """
-import os.path
 from os import environ as env
 import json
 from datetime import datetime
@@ -14,7 +13,6 @@ class Course(Base):
     """ App functionalities """
     def get_courses(self):
       """ Return all courses student is enrolled in """
-      # return self.data.get('courses', [])
       courses = self.data.get('courses', [])
       units = list()
       for course in courses:
@@ -30,7 +28,6 @@ class Course(Base):
       """ Return unit's coursework
           course_id: id for unit 
       """
-      # Add function to get materials (addons) on a coursework 
       c_work = (self.service.courses().courseWork().list(courseId=course_id).execute()).get('courseWork')
       if not c_work:
         return []
@@ -73,7 +70,6 @@ class Course(Base):
       """ Return student submissions for a unit
           course_id: unit ID
           course_work_id: ID for specific coursework item
-          -- UNUSED -- 
       """
       coursework = self.get_coursework(course_id)
       submissions = list()
@@ -82,8 +78,7 @@ class Course(Base):
         print(res)
         if not res:
           # Could be a group submission, not your submission
-          # continue
-          print('No submission')
+          continue
 
         data = {'id': res['id'], 'title': work.get('title'), 'link': work.get('alternateLink'),
                'maxPoints': work.get('maxPoints'), 'grade': res.get('assignedGrade'),
@@ -98,7 +93,7 @@ class Course(Base):
       """ Get work submission id"""
       subs = self.get_submission(course_id, course_work_id)
       if subs:
-          return (subs.get('studentSubmissions')[0]).get('id')
+          return subs.get('id')
       return None
     
     
@@ -215,7 +210,7 @@ class Course(Base):
            time = work.get('dueTime')
            time = {'hour': time.get('hours'), 'minute': time.get('minutes')}
            date.update(time)
-        due_date = datetime(**date)
+        due_date = datetime(**date) if date else None
       else:
           due_date = None
       time_remaining = self.get_remaining_time(due_date)
@@ -229,7 +224,7 @@ class Course(Base):
       return self.service.courses().courseWork().studentSubmissions().list(
         courseId=course_id,
         courseWorkId=course_work_id
-      ).execute()
+      ).execute().get('studentSubmissions')[0]
     
     def get_grades(self, course_id):
       """ Returns grades for a certain unit"""

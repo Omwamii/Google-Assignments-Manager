@@ -1,8 +1,6 @@
 //  Cache class to avoid refetching data from backend over a short period
 
 class PendingAssignmentsCache {
-    constructor() {}
-
     hasExpired() {
         // check if an object has reached its expiry time in cache
         const expiryTimeString = JSON.parse(localStorage.getItem('pending_expiry'))
@@ -12,6 +10,11 @@ class PendingAssignmentsCache {
             return true // data has expired
         }
         return false; // not yet expired
+    }
+
+    expireNow() {
+        // set cache to expire now
+        localStorage.setItem('pending_expiry', 0);
     }
 
     saveData(data){
