@@ -8,7 +8,7 @@
 + Submit assignments (with proper permissions)
 + Unsubmit assignments (with proper permissions)
 
-See video demo: [https://youtu.be/LD90tDF5B9Y?si=I8_azjUMfIkIMRvt]
+See video demo: [ https://youtu.be/LD90tDF5B9Y?si=I8_azjUMfIkIMRvt ]
 
 ## How I did it
 I utilized the Google classroom API to get resources such as courses, coursework, student submissions, notifications and captured required information from these resources then sent to the React frontend using Django function-based api views
