@@ -54,7 +54,6 @@ function Home() {
     (async () => {
       if (currentWorkId !== 0 && currentUnitId !== 0) {
         // prevent from fetching first time (default id == 0)
-        // add load before loading current work (might have previous data)
         try {
           const full_url = `${url}assignment/${currentUnitId}/${currentWorkId}/`;
           const data = await axios.get(full_url);
