@@ -8,7 +8,7 @@
 + Submit assignments (with proper permissions)
 + Unsubmit assignments (with proper permissions)
 
-See video demo: [ https://youtu.be/LD90tDF5B9Y?si=I8_azjUMfIkIMRvt ]
+See video demo: https://youtu.be/LD90tDF5B9Y?si=I8_azjUMfIkIMRvt
 
 ## How I did it
 I utilized the Google classroom API to get resources such as courses, coursework, student submissions, notifications and captured required information from these resources then sent to the React frontend using Django function-based api views
@@ -20,7 +20,7 @@ Authentication was handled by Google Oauth through the Oauth consent screen
 
 ## NB: SUBMITTING ASSIGNMENTS
 - The Classroom API requires you to be the owner of a coursework to be able to modify assignment attachments, meaning you have to be the creator of the assignment to be able to modify the work. This means that students can only view information about their submissions but they can't submit work through the API, i realized this mid project :(
-- For more info, see the docs: [https://developers.google.com/classroom/reference/rest/v1/courses.courseWork.studentSubmissions] 
+- For more info, see the docs: https://developers.google.com/classroom/reference/rest/v1/courses.courseWork.studentSubmissions
 
 ## File structure
 ### Important files organization
