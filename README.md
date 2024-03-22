@@ -19,7 +19,7 @@ Authentication was handled by Google Oauth through the Oauth consent screen
 
 
 ## NB: SUBMITTING ASSIGNMENTS
-- The Classroom API requires you to be the owner of a coursework to be able to modify assignment attachments, meaning you have to be the creator of the assignment to be able to modify the work. This means that students can only view information about their submissions but they can't submit work through the API, i realized this mid project :(
+- The Classroom API requires you to be the owner of a coursework to be able to modify assignment attachments, meaning you have to be the creator of the assignment to be able to modify the work. This means that students can only view information about their submissions but they can't submit work through the API, i realized this mid project :(. Creators (teachers) however can be able to modify submissions.
 - For more info, see the docs: https://developers.google.com/classroom/reference/rest/v1/courses.courseWork.studentSubmissions
 
 ## File structure
