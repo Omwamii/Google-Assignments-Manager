@@ -10,7 +10,7 @@
 
 See video demo: https://youtu.be/LD90tDF5B9Y?si=I8_azjUMfIkIMRvt
 
-## How I did it
+## Implementation
 I utilized the Google classroom API to get resources such as courses, coursework, student submissions, notifications and captured required information from these resources then sent to the React frontend using Django function-based api views
 
 I also used Google Drive API to upload files to Google drive then submitting the files to google classroom since the submission object for files require a file id to be a google drive id
