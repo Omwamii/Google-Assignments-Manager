@@ -34,6 +34,7 @@ Authentication was handled by Google Oauth through the Oauth consent screen
     |__ mysubs/
     |__ requirements.txt
     |__ README.md
+    |__ run.sh
 
 
     assigno_manager/
@@ -105,32 +106,21 @@ Authentication was handled by Google Oauth through the Oauth consent screen
 
 *g-assigns/src/* * - contains React component files
 
+*run.sh*  - bash scripts used to start the app
+
 ## How to run
 ### Linux
-- After cloning, make sure all packages necessary are installed by typing
-```python
-pip install -r requirements.txt
-```
 - To be added to **test users**, send an email to alphaian020@gmail.com. Since this is a google cloud console project, only allowed users can access the API functionalities.
 
 Because of many unassigned grades, your progress report chart reports could be minimal (or none)
-- To view test data and see how it looks like on the chart, start the backend server with:
+- To view test data and see how it looks like on the chart, start the app with
 ```python
-gunicorn assigno_manager.wsgi:application --timeout 60
+./run.sh
 ```
 
-- To view your real data (your real unit average grades) on the chart, start the backend server with
+- To view your real data (your real unit average grades) on the chart, start the app with
 ```python
-USE_CHART_DATA=REAL gunicorn assigno_manager.wsgi:application --timeout 60
-```
-
-- In another tab, from the root folder, move to frontend folder and install the packages with
-```
-cd g-assigns ; npm install
-```
-- Start the frontend server
-```python
-npm start
+USE_CHART_DATA=REAL ./run.sh
 ```
 
 ### MacOs / Windows
