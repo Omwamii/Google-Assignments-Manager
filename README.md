@@ -39,12 +39,6 @@ Authentication was handled by Google Oauth through the Oauth consent screen
 
     assigno_manager/
     ├── asgi.py
-    ├── __init__.py
-    ├── __pycache__
-    │   ├── __init__.cpython-311.pyc
-    │   ├── settings.cpython-311.pyc
-    │   ├── urls.cpython-311.pyc
-    │   └── wsgi.cpython-311.pyc
     ├── settings.py
     ├── urls.py
     └── wsgi.py
@@ -59,10 +53,6 @@ Authentication was handled by Google Oauth through the Oauth consent screen
     ├── data
     │   └── stats.json
     ├── files.py
-    ├── __init__.py
-    ├── migrations
-    │   ├── 0001_initial.py
-    │   └── __init__.py
     ├── models.py
     ├── regex.py
     ├── tests.py
