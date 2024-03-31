@@ -86,28 +86,6 @@ Authentication was handled by Google Oauth through the Oauth consent screen
     └── UnitsCache.js
 
 
-*models.py* - module with one model 'MarkAsDone' which keeps track of assignments which are marked as Done
-
-*views.py* - module with the api views that handle api requests to the backend
-
-*urls.py* - module with api url configurations
-
-*base.py* - module with the Base Class for app resources initializations and authentication
-
-*course.py* - module with the Course class, inheriting from base that handles course information resources
-
-*file.py* - module with the Files class, which handles file operations like submission, unsubmission
-
-*app.py* - module with the final App class, inheriting from Files
-
-*admin.py* - module with registered models on the admin site
-
-*regex.py* - module with a function which uses regex to extract course code name from a complete course description
-
-*g-assigns/src/* * - contains React component files
-
-*run.sh*  - bash scripts used to start the app
-
 ## How to run
 ### Linux
 - To be added to **test users**, send an email to alphaian020@gmail.com. Since this is a google cloud console project, only allowed users can access the API functionalities.
