@@ -186,10 +186,8 @@ class Course(Base):
                     continue
                  files = self.get_submission_files(course['id'], work['id'])
                  if files:
-                    if len(files) == 0:
+                    if len(files) == 0:  # you had not made a submission for the assignment
                        pending.append(pending_work)
-                 else:
-                    pending.append(pending_work)  # test
           else:
             # Before appending work as due, check if it had been marked as done
              if MarksAsDone.objects.filter(work_id=work['id'], course_id=course['id']).exists():
