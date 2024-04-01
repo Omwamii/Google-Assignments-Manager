@@ -78,7 +78,7 @@ Authentication was handled by Google Oauth through the Oauth consent screen
 
 ## How to run
 ### Linux
-- To be added to **test users**, send an email to alphaian020@gmail.com. Since this is a google cloud console project, only allowed users can access the API functionalities.
+- To be added to **test users**, send an email to alphaian020@gmail.com. Since this is a google cloud console project in test mode, only allowed users can access the API functionalities.
 
 Because of many unassigned grades, your progress report chart reports could be minimal (or none)
 - To view test data and see how it looks like on the chart, start the app with
