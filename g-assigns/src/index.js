@@ -3,6 +3,9 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+// in dev mode, strict mode causes document to mount twice
+// which may result in issues when making requests to backend
+// hence not used (for now)
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <App />
