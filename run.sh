@@ -16,7 +16,13 @@ fi
 
 echo "Installing Node.js dependencies..."
 cd g-assigns
-npm install
+
+if [ -d node_modules ]; then
+	# avoid running npm install when unnecessary
+	echo "node modules already installed..."
+else
+	npm install
+fi
 
 echo "starting server..."
 npm start
