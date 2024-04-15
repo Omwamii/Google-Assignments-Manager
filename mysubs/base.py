@@ -1,13 +1,17 @@
 import os.path
+import os
+import socket
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from psutil import process_iter
+from signal import SIGTERM # or SIGKILL
 
 
 class Base():
-    """ Oauth implementation for logins & API resources initialization"""
+    """ O-auth implementation for logins & API resources initialization. """
     creds, flow, data = (None, None, None)
 
     # If modifying these scopes, delete the file token.json and restart authoration
@@ -30,19 +34,37 @@ class Base():
           Avail service to fetch resources e.g courses, assignments (self.service)
       """
       if os.path.exists("token.json"):
-        # The file token.json stores the user's access and refresh tokens, and is
+        # The file token.json stores the user's access and refresh tokens, and is.
         # created automatically when the authorization flow completes for the first
         # time.
         self.creds = Credentials.from_authorized_user_file('token.json', self._SCOPES)
 
       if not self.creds or not self.creds.valid:
         if self.creds and self.creds.expired and self.creds.refresh_token:
-          self.creds.refresh(Request())
+            try:
+                self.creds.refresh(Request())
+            except Exception:
+                os.remove('token.json')
+                # temp sln for refresh token error
+                try:
+                    _kill_process(5000)
+                except Exception:
+                    pass
+
+                self.flow = InstalledAppFlow.from_client_secrets_file("credentials.json", self._SCOPES)
+                self.creds = self.flow.run_local_server(port=5000, access_type='offline', prompt='consent')
+                _kill_process(5000)
         else:
             # credentials file was downloaded to root from google cloud console credentials
+            try:
+                _kill_process(5000)
+            except Exception:
+                pass
+
             self.flow = InstalledAppFlow.from_client_secrets_file("credentials.json", self._SCOPES)
-            self.creds = self.flow.run_local_server(port=8080, access_type='offline', prompt='consent')
-        
+            self.creds = self.flow.run_local_server(port=5000, access_type='offline', prompt='consent')
+            _kill_process(5000)
+
         with open("token.json", "w") as token:
           token.write(self.creds.to_json())
 
@@ -62,3 +84,11 @@ class Base():
       except HttpError as error:
         # Error with google drive api
         print(f"Drive API error: {error}")
+
+
+def _kill_process(port_number: int) -> None:
+    """ Kill process """
+    for proc in process_iter():
+        for conns in proc.connections(kind='inet'):
+            if conns.laddr.port == port_number:
+                proc.send_signal(SIGTERM) # or SIGKILL

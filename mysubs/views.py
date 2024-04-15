@@ -9,7 +9,7 @@ app = App()  # App instance with auth & classroom resources
 @api_view(['GET'])
 def coursework(_, unit_id):
     """ Returns coursework of a unit
-        Required: unit ID
+        Required: unique unit ID
     """
     return Response(app.get_coursework(unit_id))
 
