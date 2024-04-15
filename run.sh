@@ -31,7 +31,7 @@ stop_servers_windows() {
     # Windows-specific server stop logic here
 }
 
-# Trap interrupt signal (Ctrl+C)
+# Trap interrupt signal function
 trap_interrupt() {
     echo -e "\n\e[32mScript interrupted. Stopping servers...\e[0m"
 

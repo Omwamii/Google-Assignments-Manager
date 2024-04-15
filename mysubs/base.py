@@ -47,23 +47,23 @@ class Base():
                 os.remove('token.json')
                 # temp sln for refresh token error
                 try:
-                    _kill_process(5000)
+                    _kill_process(8080)
                 except Exception:
                     pass
 
                 self.flow = InstalledAppFlow.from_client_secrets_file("credentials.json", self._SCOPES)
-                self.creds = self.flow.run_local_server(port=5000, access_type='offline', prompt='consent')
-                _kill_process(5000)
+                self.creds = self.flow.run_local_server(port=8080, access_type='offline', prompt='consent')
+                _kill_process(8080)
         else:
             # credentials file was downloaded to root from google cloud console credentials
             try:
-                _kill_process(5000)
+                _kill_process(8080)
             except Exception:
                 pass
 
             self.flow = InstalledAppFlow.from_client_secrets_file("credentials.json", self._SCOPES)
-            self.creds = self.flow.run_local_server(port=5000, access_type='offline', prompt='consent')
-            _kill_process(5000)
+            self.creds = self.flow.run_local_server(port=8080, access_type='offline', prompt='consent')
+            _kill_process(8080)
 
         with open("token.json", "w") as token:
           token.write(self.creds.to_json())
