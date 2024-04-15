@@ -26,23 +26,20 @@ stop_servers_linux() {
 }
 
 # Function to stop app servers running on specific ports (Windows)
-stop_servers_windows() {
-    echo -e "\n\e[31mStopping backend server...\e[0m"
-    # Windows-specific server stop logic here
-}
 
 # Trap interrupt signal function
 trap_interrupt() {
     echo -e "\n\e[32mScript interrupted. Stopping servers...\e[0m"
 
     # Determine OS and call appropriate stop_servers function
-    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        stop_servers_linux
-    elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
-        stop_servers_windows
-    else
-        echo -e "\e[31mUnsupported operating system: $OSTYPE\e[0m"
-    fi
+    # if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    #    stop_servers_linux
+    #elif [[ "$OSTYPE" == "msys" || "$OSTYPE" == "cygwin" ]]; then
+    #    stop_servers_windows
+    #else
+    #    echo -e "\e[31mUnsupported operating system: $OSTYPE\e[0m"
+    #fi
+    stop_servers_linux
 
     exit 1
 }
