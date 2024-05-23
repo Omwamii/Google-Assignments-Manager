@@ -44,25 +44,11 @@ class Base():
                 self.creds.refresh(Request())
             except Exception:
                 os.remove('token.json')
-                # temp sln for refresh token error
-                try:
-                    _kill_process(8080)
-                except Exception:
-                    pass
-
-                self.flow = InstalledAppFlow.from_client_secrets_file("credentials.json", self._SCOPES)
-                self.creds = self.flow.run_local_server(port=8080, access_type='offline', prompt='consent')
-                _kill_process(8080)
+                # temp sln for refresh token error TODO: channge app to production to solve
+                self.create_token_from_credentials_file() # creates new token file
         else:
-            # credentials file was downloaded to root from google cloud console credentials
-            try:
-                _kill_process(8080)
-            except Exception:
-                pass
-
-            self.flow = InstalledAppFlow.from_client_secrets_file("credentials.json", self._SCOPES)
-            self.creds = self.flow.run_local_server(port=8080, access_type='offline', prompt='consent')
-            _kill_process(8080)
+           # credentials file was downloaded to root from google cloud console credentials
+           self.create_token_from_credentials_file()
 
         with open("token.json", "w") as token:
           token.write(self.creds.to_json())
@@ -84,6 +70,16 @@ class Base():
         # Error with google drive api
         print(f"Drive API error: {error}")
 
+    def create_token_from_credentials_file(self):
+      """ Create auth token from credentials file """
+      try:
+         _kill_process(8080)
+      except Exception:
+        pass
+      
+      self.flow = InstalledAppFlow.from_client_secrets_file("credentials.json", self._SCOPES)
+      self.creds = self.flow.run_local_server(port=8080, access_type='offline', prompt='consent')
+      _kill_process(8080)
 
 def _kill_process(port_number: int) -> None:
     """ Kill process """
