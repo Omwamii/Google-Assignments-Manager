@@ -6,6 +6,9 @@ from .models import MarksAsDone
 
 app = App()  # App instance with auth & classroom resources
 
+
+#TODO add concurent processes to reduce get_assignments() time
+
 @api_view(['GET'])
 def coursework(_, unit_id):
     """ Returns coursework of a unit

@@ -2,12 +2,10 @@ import os.path
 import os
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
-from psutil import process_iter
-from signal import SIGTERM # or SIGKILL
-
+from google_auth_oauthlib.flow import InstalledAppFlow
+from .helpers import kill_processes_by_port
 
 class Base():
     """ O-auth implementation for logins & API resources initialization. """
@@ -40,9 +38,11 @@ class Base():
 
       if not self.creds or not self.creds.valid:
         if self.creds and self.creds.expired and self.creds.refresh_token:
+            print(f"Refresh token: {self.creds.refresh_token}")
             try:
                 self.creds.refresh(Request())
-            except Exception:
+            except Exception as e:
+                print(f"Exception refreshing token: {e}")
                 os.remove('token.json')
                 # temp sln for refresh token error TODO: channge app to production to solve
                 self.create_token_from_credentials_file() # creates new token file
@@ -72,18 +72,13 @@ class Base():
 
     def create_token_from_credentials_file(self):
       """ Create auth token from credentials file """
-      try:
-         _kill_process(8080)
-      except Exception:
-        pass
+      # TODO
+      # try:
+      #    kill_processes_by_port(8080)
+      # except Exception as e:
+      #   print(f"Exception encountered killing process: {e}")
       
+      # Google OAuth flow
       self.flow = InstalledAppFlow.from_client_secrets_file("credentials.json", self._SCOPES)
       self.creds = self.flow.run_local_server(port=8080, access_type='offline', prompt='consent')
-      _kill_process(8080)
-
-def _kill_process(port_number: int) -> None:
-    """ Kill process """
-    for proc in process_iter():
-        for conns in proc.connections(kind='inet'):
-            if conns.laddr.port == port_number:
-                proc.send_signal(SIGTERM) # or SIGKILL
+      # kill_processes_by_port(8080)
