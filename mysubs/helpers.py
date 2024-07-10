@@ -1,7 +1,7 @@
 import os
 import psutil
 
-def kill_processes_by_port(port):
+async def kill_processes_by_port(port):
     killed_any = False
 
     for proc in psutil.process_iter(['pid', 'name', 'connections']):
@@ -25,13 +25,13 @@ def kill_processes_by_port(port):
 
     return killed_any
 
-def kill_process_and_children(proc):
+async def kill_process_and_children(proc):
     children = proc.children(recursive=True)
     for child in children:
         kill_process(child)
 
     kill_process(proc)
 
-def kill_process(proc):
+async def kill_process(proc):
     print(f"Killing process with PID {proc.pid}")
     proc.kill()

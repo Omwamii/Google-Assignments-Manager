@@ -1,7 +1,7 @@
 import re
 
 # List of strings
-def get_course_code(course_string: str) -> str:
+async def get_course_code(course_string: str) -> str:
     """ Extracts the course code from the course name """
     # Regular expression pattern
     pattern = r'.*?(CSC\s*_*?\d{3}).*?'

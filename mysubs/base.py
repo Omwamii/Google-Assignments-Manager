@@ -70,7 +70,7 @@ class Base():
         # Error with google drive api
         print(f"Drive API error: {error}")
 
-    def create_token_from_credentials_file(self):
+    async def create_token_from_credentials_file(self):
       """ Create auth token from credentials file """
       # TODO
       # try:
